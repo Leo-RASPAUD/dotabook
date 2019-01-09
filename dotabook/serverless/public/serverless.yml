@@ -1,0 +1,33 @@
+service: Dotabook-public
+package:
+  excludeDevDependencies: true
+
+provider:
+  name: aws
+  stage: PROD
+  memorySize: 3008
+  timeout: 30
+  runtime: nodejs8.10
+  region: ap-southeast-2
+
+functions:
+  getOpenidUrl:
+    handler: authentication/openid.getUrl
+    events:
+      - http:
+          path: login
+          method: get
+          cors:
+            origin: '*'
+  getProfile:
+    handler: authentication/profile.handler
+    events:
+      - http:
+          path: profile
+          method: get
+          request:
+            parameters:
+              paths:
+                profileId: true
+          cors:
+            origin: '*'
