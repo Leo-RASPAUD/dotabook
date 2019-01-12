@@ -9,7 +9,6 @@ provider:
   timeout: 30
   runtime: nodejs8.10
   region: ap-southeast-2
-  profile: perso
 
 functions:
   getOpenidUrl:
@@ -25,18 +24,6 @@ functions:
     events:
       - http:
           path: profile
-          method: get
-          request:
-            parameters:
-              paths:
-                profileId: true
-          cors:
-            origin: '*'
-  getMatchHistory:
-    handler: getMatchHistory/getMatchHistory.handler
-    events:
-      - http:
-          path: match/history
           method: get
           request:
             parameters:
