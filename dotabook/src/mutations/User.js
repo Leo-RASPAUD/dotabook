@@ -6,6 +6,13 @@ const createUser = `mutation createUser($avatar: String!, $note: Int!, $username
     }
   }`;
 
+const updateNote = `mutation updateNote($id: String!, $note: Int!) {
+    updateNote(id: $id, note: $note) {
+        ${User}
+    }
+}`;
+
 export default {
   createUser,
+  updateNote,
 };

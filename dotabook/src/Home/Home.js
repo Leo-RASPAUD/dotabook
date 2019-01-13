@@ -16,7 +16,6 @@ class Home extends React.PureComponent {
 
   render() {
     const { isLogged } = this.state;
-    console.log(isLogged);
     if (!isLogged) {
       return <Redirect to="/login" />;
     }

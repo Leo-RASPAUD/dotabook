@@ -25,6 +25,38 @@ const getMatches = `query getMatches($profileId: String!, $offset: String, $limi
     }
 }`;
 
+const getMatchDetails = ` query getMatchDetails($matchId: String!) {
+  getMatchDetails(matchId: $matchId) {
+    match_id
+    dire_score
+    duration
+    first_blood_time
+    game_mode
+    radiant_score
+    radiant_win
+    start_time
+    players {
+      note
+      account_id
+      assists
+      deaths
+      kills
+      personaname
+      isRadiant
+      player_slot
+      hero {
+        id,
+        name,
+        localized_name,
+        img,
+        icon,
+      }
+    }
+    patch
+  }
+}`;
+
 export default {
   getMatches,
+  getMatchDetails,
 };
