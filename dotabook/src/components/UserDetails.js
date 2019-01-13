@@ -6,12 +6,12 @@ import auth from '../utils/auth';
 
 const User = ({ user: { username, avatar, note, id } }) => {
   return (
-    <>
+    <div style={{ marginBottom: 50 }}>
       <div>{username}</div>
       <img src={avatar} alt="avatar" />
       <div>{note}</div>
       <div>{id}</div>
-    </>
+    </div>
   );
 };
 

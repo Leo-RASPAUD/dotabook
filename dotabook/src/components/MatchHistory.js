@@ -1,39 +1,15 @@
 import React from 'react';
-import { graphqlOperation } from 'aws-amplify';
-import { Connect } from 'aws-amplify-react';
-import { FaLock } from 'react-icons/fa';
+import { API, graphqlOperation } from 'aws-amplify';
 import styled from 'styled-components';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns/format';
 import queries from '../queries/Matches';
 import auth from '../utils/auth';
-
-const Player = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 200px;
-  display: flex;
-  align-items: center;
-  background-color: #90caf9;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px;
-`;
+import time from '../utils/time';
 
 const Data = styled.td`
   min-width: 150px;
   text-align: center;
-`;
-
-const Avatar = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 25px;
-`;
-
-const AvatarImage = styled.img`
-  margin-right: 10px;
 `;
 
 const Table = styled.table`
@@ -41,53 +17,37 @@ const Table = styled.table`
   & tr td,
   th {
     box-shadow: 2px 0 0 0 #888, 0 2px 0 0 #888, 2px 2px 0 0 #888, 2px 0 0 0 #888 inset, 0 2px 0 0 #888 inset;
-    height: 150px;
     padding: 10px;
   }
 `;
-
-const PlayerDetails = ({ player }) => {
-  if (!player.playerDetails) {
-    return (
-      <Player>
-        <AvatarImage src={player.heroImages.small} alt="hero" />
-        <FaLock />
-        <span>Private profile</span>
-      </Player>
-    );
-  }
-  return (
-    <Player>
-      <AvatarImage src={player.heroImages.small} alt="hero" />
-      <Avatar>
-        <AvatarImage src={player.playerDetails.avatar} alt="avatar not found" />
-        <span>{player.playerDetails.personaname}</span>
-      </Avatar>
-    </Player>
-  );
-};
 
 const MatchHistoryComponent = ({ matches }) => (
   <Table>
     <thead>
       <tr>
-        <th>Match id</th>
+        <th>Hero</th>
         <th>Date</th>
-        <th>Players</th>
+        <th>Result</th>
+        <th>Duration</th>
+        <th>K / D / A</th>
       </tr>
     </thead>
     <tbody>
       {matches.map(match => {
         const date = fromUnixTime(match.start_time);
+        const isRadiant = match.player_slot < 5;
+        const isWon = isRadiant && match.radiant_win;
         return (
           <tr key={match.match_id}>
-            <Data>{match.match_id}</Data>
-            <Data>{format(date, 'dd/MM/yyyy k:m')}</Data>
-            <td style={{ display: 'flex' }}>
-              {match.players.map(player => (
-                <PlayerDetails player={player} key={player.account_id + player.hero_id} />
-              ))}
+            <td>
+              <img src={`https://api.opendota.com${match.hero.img}`} alt="hero" height={50} width={100} />
             </td>
+            <Data>{format(date, 'dd/MM/yyyy k:m')}</Data>
+            <Data>{isWon ? 'Won match' : 'Lost match'}</Data>
+            <Data>{time.secondsToHms(match.duration)}</Data>
+            <Data>
+              {match.kills} / {match.deaths} / {match.assists}
+            </Data>
           </tr>
         );
       })}
@@ -95,18 +55,63 @@ const MatchHistoryComponent = ({ matches }) => (
   </Table>
 );
 
-const MatchHistory = props => (
-  <Connect query={graphqlOperation(queries.getMatches, { profileId: auth.getUserId() })}>
-    {({ data: { getMatches: matches }, loading, error }) => {
-      if (error) {
-        return <h3>Error</h3>;
-      }
-      if (loading || !matches) {
-        return <h3>Loading matches...</h3>;
-      }
-      return <MatchHistoryComponent matches={matches} />;
-    }}
-  </Connect>
-);
+class MatchHistory extends React.PureComponent {
+  state = {
+    offset: 0,
+    limit: 10,
+    matches: [],
+    loading: true,
+  };
+
+  componentDidMount = async () => {
+    const { offset, limit } = this.state;
+    const {
+      data: { getMatches: matches },
+    } = await API.graphql(graphqlOperation(queries.getMatches, { profileId: auth.getUserId(), limit, offset }));
+    this.setState({ matches, loading: false });
+  };
+
+  loadData = async ({ isNext }) => {
+    this.setState({ loading: true });
+    const { offset, limit } = this.state;
+    const newOffset = isNext ? offset + limit : offset - limit;
+    const {
+      data: { getMatches: matches },
+    } = await API.graphql(
+      graphqlOperation(queries.getMatches, { profileId: auth.getUserId(), offset: newOffset, limit }),
+    );
+    this.setState({ offset: newOffset, matches, loading: false });
+  };
+
+  changeNumberDisplayed = async event => {
+    const limit = event.target.value;
+    await this.setState({ limit, loading: true });
+    const {
+      data: { getMatches: matches },
+    } = await API.graphql(graphqlOperation(queries.getMatches, { profileId: auth.getUserId(), offset: 0, limit }));
+    this.setState({ matches, loading: false, offset: 0, limit });
+  };
+
+  render() {
+    const { matches, loading, offset, limit } = this.state;
+    if (loading) {
+      return <div>Loading matches...</div>;
+    }
+    return (
+      <div>
+        <select onChange={this.changeNumberDisplayed} value={limit}>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+        <MatchHistoryComponent matches={matches} />
+        <button onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
+          Previous page
+        </button>
+        <button onClick={() => this.loadData({ isNext: true })}>Next page</button>
+      </div>
+    );
+  }
+}
 
 export default MatchHistory;
