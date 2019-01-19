@@ -32,8 +32,8 @@ const MatchHistoryComponent = ({ matches, getMatchDetails }) => (
     <tbody>
       {matches.map(match => {
         const date = fromUnixTime(match.start_time);
-        const isRadiant = match.player_slot < 5;
-        const isWon = isRadiant && match.radiant_win;
+        const isRadiant = match.player_slot < 128;
+        const isWon = (isRadiant && match.radiant_win) || (!isRadiant && !match.radiant_win);
         return (
           <tr key={match.match_id} onClick={() => getMatchDetails({ id: match.match_id })}>
             <td>

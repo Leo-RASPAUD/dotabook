@@ -25,8 +25,8 @@ const getMatches = `query getMatches($profileId: String!, $offset: String, $limi
     }
 }`;
 
-const getMatchDetails = ` query getMatchDetails($matchId: String!) {
-  getMatchDetails(matchId: $matchId) {
+const getMatchDetails = ` query getMatchDetails($matchId: String!, $currentUserId: String!) {
+  getMatchDetails(matchId: $matchId, currentUserId:$currentUserId) {
     match_id
     dire_score
     duration
@@ -36,6 +36,7 @@ const getMatchDetails = ` query getMatchDetails($matchId: String!) {
     radiant_win
     start_time
     players {
+      alreadyNoted
       note
       account_id
       assists

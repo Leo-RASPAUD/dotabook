@@ -3,6 +3,7 @@ import User from '../types/User';
 const getOpenIdUrl = `query getOpenIdUrl {
     getOpenIdUrl
 }`;
+
 const getUser = `query getUser($id: String!) {
     getUser(id: $id) {
         ${User}

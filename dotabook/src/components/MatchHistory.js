@@ -5,6 +5,7 @@ import auth from '../utils/auth';
 import MatchDetails from './MatchDetails';
 import DropdownDisplayCount from './DropdownDisplayCount';
 import MatchHistoryComponent from './MatchHistoryComponent';
+import mutations from '../mutations/User';
 
 class MatchHistory extends React.PureComponent {
   state = {
@@ -49,8 +50,30 @@ class MatchHistory extends React.PureComponent {
     await this.setState({ loadingDetails: true });
     const {
       data: { getMatchDetails: data },
-    } = await API.graphql(graphqlOperation(queries.getMatchDetails, { matchId: id }));
+    } = await API.graphql(graphqlOperation(queries.getMatchDetails, { matchId: id, currentUserId: auth.getUserId() }));
     this.setState({ loadingDetails: false, matchDetails: data });
+  };
+
+  updateNote = async ({ isNotePlus, accountId }) => {
+    const { players } = this.state.matchDetails;
+    const {
+      data: { updateNote: results },
+    } = await API.graphql(
+      graphqlOperation(mutations.updateNote, { isNotePlus, accountId, currentUserId: auth.getUserId() }),
+    );
+    this.setState({
+      matchDetails: {
+        players: players.map(player => {
+          if (player.account_id === accountId) {
+            return {
+              ...player,
+              note: results.updatedNote,
+            };
+          }
+          return player;
+        }),
+      },
+    });
   };
 
   render() {
@@ -60,7 +83,9 @@ class MatchHistory extends React.PureComponent {
     }
     return (
       <div>
-        {matchDetails && <MatchDetails data={matchDetails} loadingDetails={loadingDetails} />}
+        {matchDetails && (
+          <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
+        )}
         <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
         <MatchHistoryComponent matches={matches} getMatchDetails={this.getMatchDetails} />
         <button onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
