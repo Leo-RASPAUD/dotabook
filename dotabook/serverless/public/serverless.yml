@@ -15,49 +15,14 @@ provider:
       Action:
         - 'dynamodb:*'
       Resource: '*'
-
 functions:
   getOpenidUrl:
     handler: authentication/openid.getUrl
-    events:
-      - http:
-          path: login
-          method: get
-          cors:
-            origin: '*'
   getProfile:
     handler: authentication/profile.handler
-    events:
-      - http:
-          path: profile
-          method: get
-          request:
-            parameters:
-              paths:
-                profileId: true
-          cors:
-            origin: '*'
   getMatchHistory:
     handler: getMatchHistory/getMatchHistory.handler
-    events:
-      - http:
-          path: match/history
-          method: get
-          request:
-            parameters:
-              paths:
-                profileId: true
-          cors:
-            origin: '*'
+  updateNote:
+    handler: updateNote/updateNote.handler
   getMatchDetails:
     handler: getMatchDetails/getMatchDetails.handler
-    events:
-      - http:
-          path: match/
-          method: get
-          request:
-            parameters:
-              paths:
-                matchId: true
-          cors:
-            origin: '*'

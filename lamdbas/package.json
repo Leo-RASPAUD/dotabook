@@ -15,8 +15,5 @@
   "bugs": {
     "url": "https://github.com/Leo-RASPAUD/dotabook/issues"
   },
-  "homepage": "https://github.com/Leo-RASPAUD/dotabook#readme",
-  "dependencies": {
-    "axios": "^0.18.0"
-  }
+  "homepage": "https://github.com/Leo-RASPAUD/dotabook#readme"
 }

@@ -5,6 +5,7 @@ import constants from '../constants/constants';
 import authUtils from '../utils/auth';
 import { API, graphqlOperation } from 'aws-amplify';
 import mutations from '../mutations/User';
+import queries from '../queries/User';
 
 const BASE_URL_API = 'https://no00o21r69.execute-api.ap-southeast-2.amazonaws.com/PROD';
 
@@ -16,6 +17,7 @@ class Login extends React.PureComponent {
   };
 
   componentWillMount = async () => {
+    // TODO: simplify later by creating directly in the lamdbda
     const isAuth = authUtils.isAuthenticated();
     if (isAuth) {
       this.setState({ loading: false, redirect: true, redirectUrl: '/home' });
@@ -23,10 +25,12 @@ class Login extends React.PureComponent {
       const parsed = window.location.href.split('&');
       if (parsed.length > 1 && !isAuth) {
         const profileId = parsed[3].split('%2Fid%2F')[1];
-        const result = await axios.get(`${BASE_URL_API}/profile?profileId=${profileId}`);
-        const { personaname: username, avatar, steamid } = result.data;
-        await API.graphql(graphqlOperation(mutations.createUser, { username, avatar, note: 0, id: steamid }));
-        window.localStorage.setItem(constants.LOCAL_STORAGE_KEY, JSON.stringify(result.data));
+        const {
+          data: { getUserProfile: user },
+        } = await API.graphql(graphqlOperation(queries.getUserProfile, { profileId }));
+        const { username, avatar, id } = user;
+        await API.graphql(graphqlOperation(mutations.createUser, { username, avatar, note: 0, id }));
+        window.localStorage.setItem(constants.LOCAL_STORAGE_KEY, JSON.stringify(user));
         this.setState({ redirect: true, redirectUrl: '/home' });
       }
       this.setState({ loading: false });
@@ -34,8 +38,10 @@ class Login extends React.PureComponent {
   };
 
   login = async () => {
-    const result = await axios.get(`${BASE_URL_API}/login`);
-    this.setState({ redirect: true, redirectUrl: result.data });
+    const {
+      data: { getOpenIdUrl: redirectUrl },
+    } = await API.graphql(graphqlOperation(queries.getOpenIdUrl));
+    this.setState({ redirect: true, redirectUrl });
   };
 
   render() {

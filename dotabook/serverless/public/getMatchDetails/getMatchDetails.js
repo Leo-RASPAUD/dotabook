@@ -1,10 +1,10 @@
 const axios = require('axios');
 const AWS = require('aws-sdk');
+const utils = require('../utils/utils');
+const { convertSteamId32, convertSteamId64 } = utils;
+const constants = require('../constants/constants');
 
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
-
-const convertSteamId64 = id => '765' + (+id + 61197960265728);
-const convertSteamId32 = id => (id ? +id.slice(3) - 61197960265728 : '');
 
 const getMatchHistory = async ({ matchId }) => {
   const BASE_URL = 'https://api.opendota.com/api/matches/';
@@ -16,31 +16,28 @@ const getHeroes = async () => {
 };
 
 const updatePlayers = async players => {
-  const playersGetRequest = players
-    .filter(player => player.personaname)
-    .map(player => ({
-      id: convertSteamId64(player.account_id),
-    }));
+  const playersGetRequest = players.map(player => ({
+    id: '' + player.account_id,
+  }));
 
   const result = await dynamoClient
     .batchGet({
       RequestItems: {
-        DatabookUserTable: {
+        [constants.DOTABOOK_USER_TABLE]: {
           Keys: playersGetRequest,
         },
       },
     })
     .promise();
-  const existingPlayers = result.Responses.DatabookUserTable;
+  const existingPlayers = result.Responses[constants.DOTABOOK_USER_TABLE];
 
   const toUpdate = players.map(player => {
-    const id = convertSteamId64(player.account_id);
-    const isFind = existingPlayers.find(a => a.id === id);
+    const isFind = existingPlayers.find(a => a.id === player.account_id);
     if (isFind) {
       return isFind;
     }
     return {
-      id,
+      id: '' + player.account_id,
       note: 0,
       createdOn: Date.now(),
       updatedOn: Date.now(),
@@ -51,7 +48,7 @@ const updatePlayers = async players => {
   await dynamoClient
     .batchWrite({
       RequestItems: {
-        DatabookUserTable: toUpdate.map(item => ({
+        [constants.DOTABOOK_USER_TABLE]: toUpdate.map(item => ({
           PutRequest: {
             Item: item,
           },
@@ -76,7 +73,7 @@ module.exports.handler = async event => {
       ...matchDetails,
       players: matchDetails.players.map(player => {
         const { id, name, localized_name, img, icon } = heroes.find(hero => hero.id === player.hero_id);
-        const isUpdated = updatedPlayers.find(item => convertSteamId32(item.id) === player.account_id);
+        const isUpdated = updatedPlayers.find(item => item.id === player.account_id);
         return {
           ...player,
           note: isUpdated ? isUpdated.note : 0,
