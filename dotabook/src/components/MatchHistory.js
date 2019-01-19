@@ -67,6 +67,7 @@ class MatchHistory extends React.PureComponent {
           if (player.account_id === accountId) {
             return {
               ...player,
+              alreadyNoted: results.updatedNotedUsers.find(a => a.id === '' + player.account_id) ? true : false,
               note: results.updatedNote,
             };
           }

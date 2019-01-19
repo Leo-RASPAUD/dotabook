@@ -25,7 +25,6 @@ const Team = ({ name, players, updateNote }) => {
       <div>{name}</div>
       {players.map(player => {
         const disabled = '' + player.account_id === auth.getUserId();
-        console.log(disabled, player.account_id);
         return (
           <TeamData key={player.player_slot}>
             <img src={`https://api.opendota.com${player.hero.img}`} alt="hero" height={50} width={100} />
@@ -33,32 +32,24 @@ const Team = ({ name, players, updateNote }) => {
             <Data>
               {player.kills} / {player.deaths} / {player.assists}
             </Data>
-            <Data>
-              <FaAward />
-            </Data>
             <Data>{player.note}</Data>
-            {player.personaname && (
+            {!disabled && player.personaname && (
               <>
+                <Data>
+                  <FaAward />
+                </Data>
                 <Data>
                   <FaThumbsUp
                     style={(player.alreadyNoted && player.note === -1) || disabled ? inactive : ''}
                     color={colors.success}
-                    disabled={disabled}
-                    onClick={() => {
-                      if (disabled) return;
-                      updateNote({ isNotePlus: true, accountId: player.account_id });
-                    }}
+                    onClick={() => updateNote({ isNotePlus: true, accountId: player.account_id })}
                   />
                 </Data>
                 <Data>
                   <FaThumbsDown
-                    disabled={disabled}
                     style={(player.alreadyNoted && player.note === 1) || disabled ? inactive : ''}
                     color={colors.error}
-                    onClick={() => {
-                      if (disabled) return;
-                      updateNote({ isNotePlus: false, accountId: player.account_id });
-                    }}
+                    onClick={() => updateNote({ isNotePlus: false, accountId: player.account_id })}
                   />
                 </Data>
               </>
