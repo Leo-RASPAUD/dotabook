@@ -9,7 +9,7 @@ const updateNotedUsers = ({ accountId, isNotePlus }) => user => {
     return {
       ...user,
       updatedOn: Date.now(),
-      note: isNotePlus ? user.note + 1 : user.note - 1,
+      note: isNotePlus ? 1 : -1,
     };
   }
   return user;
@@ -19,18 +19,21 @@ module.exports.handler = async ({ accountId, currentUserId, isNotePlus }) => {
   const dbCurrentUser = await dbUtils.getUser(currentUserId);
   const dbUserToUpdate = await dbUtils.getUser(accountId);
 
-  console.log(dbCurrentUser);
-  console.log(dbUserToUpdate);
-  const alreadyUpdated = dbCurrentUser.notedUsers && dbCurrentUser.notedUsers.find(item => item.id === accountId);
+  const alreadyUpdated = dbCurrentUser.notedUsers && dbCurrentUser.notedUsers.find(item => item.id === '' + accountId);
 
   let updatedNotedUsers = [];
-  const newNotedUser = { updatedOn: Date.now(), note: isNotePlus ? 1 : 0, id: accountId };
+  const newNotedUser = { updatedOn: Date.now(), note: isNotePlus ? 1 : -1, id: accountId };
+  const needsToBeUpdated =
+    alreadyUpdated && ((alreadyUpdated.note === 1 && !isNotePlus) || (alreadyUpdated.note === -1 && isNotePlus));
+
   if (!dbCurrentUser.notedUsers) {
     updatedNotedUsers = [newNotedUser];
-  } else if (alreadyUpdated) {
+  } else if (needsToBeUpdated) {
     updatedNotedUsers = dbCurrentUser.notedUsers.map(updateNotedUsers({ accountId, isNotePlus }));
-  } else {
+  } else if (!alreadyUpdated) {
     updatedNotedUsers = dbCurrentUser.notedUsers.concat(newNotedUser);
+  } else {
+    updatedNotedUsers = dbCurrentUser.notedUsers;
   }
 
   const updatedDbUser = {
@@ -38,12 +41,19 @@ module.exports.handler = async ({ accountId, currentUserId, isNotePlus }) => {
     notedUsers: updatedNotedUsers,
   };
 
+  let newNote = dbUserToUpdate.note;
+  if (needsToBeUpdated) {
+    newNote = isNotePlus ? dbUserToUpdate.note + 2 : dbUserToUpdate.note - 2;
+  } else if (!alreadyUpdated) {
+    newNote = isNotePlus ? dbUserToUpdate.note + 1 : dbUserToUpdate.note - 1;
+  }
+
   const updateNotedUser = {
     ...dbUserToUpdate,
-    note: isNotePlus ? dbUserToUpdate.note + 1 : dbUserToUpdate.note - 1,
+    note: newNote,
   };
 
-  const results = await dynamoClient
+  await dynamoClient
     .batchWrite({
       RequestItems: {
         [constants.DOTABOOK_USER_TABLE]: [
@@ -61,7 +71,6 @@ module.exports.handler = async ({ accountId, currentUserId, isNotePlus }) => {
       },
     })
     .promise();
-  console.log(results);
   return {
     updatedNotedUsers,
     updatedNote: updateNotedUser.note,
