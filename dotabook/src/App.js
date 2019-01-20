@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import authUtils from './utils/auth';
 import Login from './Login/Login';
 import Home from './Home/Home';
+import Toolbar from './components/Toolbar';
 
 function PrivateRoute({ component: Component, ...rest }) {
   const isAuthenticated = authUtils.isAuthenticated();
@@ -12,20 +13,23 @@ function PrivateRoute({ component: Component, ...rest }) {
 class App extends Component {
   render() {
     return (
-      <Router>
-        <Switch>
-          <Route path="/login" exact component={Login} />
-          <Route
-            path="/steam-auth"
-            exact
-            component={props => {
-              window.location = props.location.state.url;
-              return null;
-            }}
-          />
-          <PrivateRoute path="/home" exact component={Home} />
-        </Switch>
-      </Router>
+      <>
+        <Toolbar />
+        <Router>
+          <Switch>
+            <Route path="/login" exact component={Login} />
+            <Route
+              path="/steam-auth"
+              exact
+              component={props => {
+                window.location = props.location.state.url;
+                return null;
+              }}
+            />
+            <PrivateRoute path="/home" exact component={Home} />
+          </Switch>
+        </Router>
+      </>
     );
   }
 }

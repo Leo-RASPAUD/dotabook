@@ -28,12 +28,12 @@ const Team = ({ name, players, updateNote }) => {
         return (
           <TeamData key={player.player_slot}>
             <img src={`https://api.opendota.com${player.hero.img}`} alt="hero" height={50} width={100} />
-            <Data>{player.personaname || 'Anonymous'}</Data>
+            <Data>{player.username || 'Anonymous'}</Data>
             <Data>
               {player.kills} / {player.deaths} / {player.assists}
             </Data>
             <Data>{player.note}</Data>
-            {!disabled && player.personaname && (
+            {!disabled && player.username && (
               <>
                 <Data>
                   <FaAward />

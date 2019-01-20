@@ -42,7 +42,7 @@ const getMatchDetails = ` query getMatchDetails($matchId: String!, $currentUserI
       assists
       deaths
       kills
-      personaname
+      username
       isRadiant
       player_slot
       hero {

@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { corsHeaders } = require('../utils/http.utils');
 const utils = require('../utils/utils');
 const { convertSteamId32 } = utils;
 

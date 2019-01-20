@@ -26,3 +26,5 @@ functions:
     handler: updateNote/updateNote.handler
   getMatchDetails:
     handler: getMatchDetails/getMatchDetails.handler
+  searchUser:
+    handler: searchUser/searchUser.handler

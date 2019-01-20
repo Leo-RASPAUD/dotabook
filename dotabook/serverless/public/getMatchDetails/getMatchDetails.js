@@ -2,6 +2,11 @@ const axios = require('axios');
 const AWS = require('aws-sdk');
 const constants = require('../constants/constants');
 const dbUtils = require('../utils/db.utils');
+const utils = require('../utils/utils');
+
+const API_KEY = '3DA79055CD92BB9EC7D2D48C64EF278A';
+const apiKey = `?key=${API_KEY}`;
+const json = `&format=json`;
 
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
@@ -12,6 +17,25 @@ const getMatchHistory = async ({ matchId }) => {
 
 const getHeroes = async () => {
   return axios.get(`https://api.opendota.com/api/heroStats`);
+};
+
+const updateExistingPlayersWithLatestUsernames = updatedPlayersDetails => player => {
+  const updated = updatedPlayersDetails.find(a => '' + a.id === '' + player.id);
+  if (updated) {
+    return {
+      ...player,
+      username: updated.personaname,
+    };
+  }
+  return player;
+};
+
+const getPlayersDetails = async players => {
+  const BASE_URL = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/';
+  const convertedIds = players.map(player => utils.convertSteamId64(player.id)).join(',');
+  const results = await axios.get(`${BASE_URL}${apiKey}${json}&steamids=[${convertedIds}]`);
+  const data = results.data.response.players;
+  return data.map(player => ({ ...player, id: utils.convertSteamId32(player.steamid) }));
 };
 
 const updatePlayers = async ({ players, currentUser }) => {
@@ -29,9 +53,11 @@ const updatePlayers = async ({ players, currentUser }) => {
     })
     .promise();
   const existingPlayers = result.Responses[constants.DOTABOOK_USER_TABLE];
+  const updatedPlayersDetails = await getPlayersDetails(existingPlayers);
+  const udpatedExistingPlayers = existingPlayers.map(updateExistingPlayersWithLatestUsernames(updatedPlayersDetails));
 
   const toUpdate = players.map(player => {
-    const isFind = existingPlayers.find(a => a.id === '' + player.account_id);
+    const isFind = udpatedExistingPlayers.find(a => a.id === '' + player.account_id);
     const alreadyNoted = currentUser.notedUsers.find(a => a.id === '' + player.account_id);
     if (isFind) {
       if (alreadyNoted) {
@@ -53,21 +79,12 @@ const updatePlayers = async ({ players, currentUser }) => {
       createdOn: Date.now(),
       updatedOn: Date.now(),
       username: player.personaname,
+      usernameLowercase: player.personaname.toLowerCase(),
       notedUsers: [],
     };
   });
 
-  await dynamoClient
-    .batchWrite({
-      RequestItems: {
-        [constants.DOTABOOK_USER_TABLE]: toUpdate.map(item => ({
-          PutRequest: {
-            Item: item,
-          },
-        })),
-      },
-    })
-    .promise();
+  await dbUtils.createUsers(toUpdate);
   return toUpdate;
 };
 
