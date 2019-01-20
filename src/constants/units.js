@@ -1,8 +1,11 @@
 const toRem = px => `${px / 16}rem`;
 
-const padding = toRem(10);
 const paddingSmall = toRem(5);
+const padding = toRem(10);
+const paddingLarge = toRem(25);
+
 const margin = toRem(25);
+const marginSmall = toRem(10);
 const marginIcon = toRem(10);
 
 export default {
@@ -10,4 +13,6 @@ export default {
   padding,
   marginIcon,
   paddingSmall,
+  marginSmall,
+  paddingLarge,
 };

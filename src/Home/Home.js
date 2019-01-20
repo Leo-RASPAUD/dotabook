@@ -1,6 +1,7 @@
 import React from 'react';
 import auth from '../utils/auth';
 import MatchHistory from '../components/MatchHistory';
+import SearchUser from '../components/SearchUser';
 
 class Home extends React.PureComponent {
   state = {
@@ -15,6 +16,7 @@ class Home extends React.PureComponent {
   render() {
     return (
       <>
+        <SearchUser />
         <MatchHistory />
         <button onClick={this.logout}>logout</button>
       </>

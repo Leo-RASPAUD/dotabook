@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import authUtils from './utils/auth';
 import PublicHome from './PublicHome/PublicHome';
 import Home from './Home/Home';
@@ -9,10 +10,18 @@ import { API, graphqlOperation } from 'aws-amplify';
 import mutations from './mutations/User';
 import queries from './queries/User';
 
-function PrivateRoute({ component: Component, ...rest }) {
+const RootWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(270deg, #242866, #03070b);
+  background-size: 400% 400%;
+`;
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
   const isAuthenticated = authUtils.isAuthenticated();
   return <Route {...rest} render={props => (isAuthenticated ? <Component {...props} /> : <Redirect to="/" />)} />;
-}
+};
 
 class App extends Component {
   state = {
@@ -54,18 +63,18 @@ class App extends Component {
       return <div>loading...</div>;
     }
     return (
-      <>
-        <Router>
-          <>
-            <Toolbar />
+      <Router>
+        <RootWrapper>
+          <Toolbar />
+          <div style={{ flex: 1 }}>
             <Switch>
               {!isAuth && <Route path="/" exact component={PublicHome} />}
               <PrivateRoute path="/home" exact component={Home} />
               <Redirect to={isAuth ? '/home' : '/'} />
             </Switch>
-          </>
-        </Router>
-      </>
+          </div>
+        </RootWrapper>
+      </Router>
     );
   }
 }

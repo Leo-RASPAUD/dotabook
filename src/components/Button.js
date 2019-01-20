@@ -2,15 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import colors from '../constants/colors';
 import units from '../constants/units';
-import auth from '../utils/auth';
-import SteamSvg from './SteamSvg';
-import { Redirect } from 'react-router';
-import constants from '../constants/constants';
 import transitions from '../constants/transitions';
-import authUtils from '../utils/auth';
-import { API, graphqlOperation } from 'aws-amplify';
-import mutations from '../mutations/User';
-import queries from '../queries/User';
 
 const Button = styled.button`
   display: flex;

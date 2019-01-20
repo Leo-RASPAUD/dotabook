@@ -14,6 +14,7 @@ const Table = styled.table`
   border-collapse: collapse;
   & th {
     font-weight: 500;
+    background: none;
   }
   & tr {
     cursor: pointer;
@@ -26,7 +27,7 @@ const Table = styled.table`
 `;
 
 const RowWrapper = styled.tr`
-  background-color: ${props => (props.isSelected ? colors.primary100 : 'white')};
+  background-color: ${props => (props.isSelected ? 'rgba(33, 150, 243, 0.25)' : 'none')};
 `;
 
 const MatchHistoryComponent = props => {

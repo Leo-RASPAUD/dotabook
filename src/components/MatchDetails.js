@@ -64,7 +64,6 @@ const Team = ({ name, players, updateNote }) => {
 class MatchDetails extends React.PureComponent {
   render() {
     const { loadingDetails, data, updateNote } = this.props;
-    console.log('ici', loadingDetails);
     if (!data || loadingDetails || data.players.length === 0) {
       return <div>Loading match details...</div>;
     }
