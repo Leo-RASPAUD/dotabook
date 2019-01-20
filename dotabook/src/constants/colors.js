@@ -1,6 +1,15 @@
 export default {
   success: 'green',
   error: 'red',
-  primary: '#2196f3',
   white: 'white',
+  primary: '#2196f3',
+  primary50: '#E3F2FD',
+  primary100: '#BBDEFB',
+  primary200: '#90CAF9',
+  primary300: '#64B5F6',
+  primary400: '#42A5F5',
+  primary500: '#2196F3',
+  primary600: '#1E88E5',
+  primary700: '#1976D2',
+  primary800: '#1565C0',
 };

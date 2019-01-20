@@ -11,14 +11,10 @@ class Home extends React.PureComponent {
 
   logout = () => {
     auth.removeUser();
-    this.setState({ isLogged: false });
+    window.location.replace('/login');
   };
 
   render() {
-    const { isLogged } = this.state;
-    if (!isLogged) {
-      return <Redirect to="/login" />;
-    }
     return (
       <>
         <UserDetails />

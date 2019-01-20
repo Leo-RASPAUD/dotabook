@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import colors from '../constants/colors';
 import units from '../constants/units';
 import auth from '../utils/auth';
+import Login from './Login';
 
 const Toolbar = styled.div`
   height: 50px;
@@ -15,9 +16,11 @@ const Toolbar = styled.div`
 `;
 
 export default props => {
-  if (!auth.isAuthenticated()) {
-    return null;
-  }
-
-  return <Toolbar>Dotabook</Toolbar>;
+  const isAuthenticated = auth.isAuthenticated();
+  return (
+    <Toolbar>
+      <div style={{ flex: 1 }}>Dotabook</div>
+      {!isAuthenticated && <Login />}
+    </Toolbar>
+  );
 };

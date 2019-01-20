@@ -16,8 +16,15 @@ const getUserProfile = `query getUserProfile($profileId: String!) {
     }
 }`;
 
+const searchUser = `query searchUser($username: String!) {
+    searchUser(username: $username) {
+        ${User}
+    }
+}`;
+
 export default {
   getUser,
   getUserProfile,
   getOpenIdUrl,
+  searchUser,
 };
