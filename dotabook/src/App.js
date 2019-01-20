@@ -25,14 +25,23 @@ class App extends Component {
       this.setState({ loading: false, isAuth: true });
     } else {
       const parsed = window.location.href.split('&');
+
       if (parsed.length > 1 && !isAuth) {
         const profileId = parsed[3].split('%2Fid%2F')[1];
+
         const {
           data: { getUserProfile: user },
         } = await API.graphql(graphqlOperation(queries.getUserProfile, { profileId }));
+
         const { username, avatar, id } = user;
-        await API.graphql(graphqlOperation(mutations.createUser, { username, avatar, note: 0, id }));
-        window.localStorage.setItem(constants.LOCAL_STORAGE_KEY, JSON.stringify(user));
+        const userToCreate = {
+          username,
+          avatar,
+          id,
+          note: 0,
+        };
+        await API.graphql(graphqlOperation(mutations.createUser, userToCreate));
+        window.localStorage.setItem(constants.LOCAL_STORAGE_KEY, JSON.stringify(userToCreate));
         this.setState({ loading: false, isAuth: true });
       }
       this.setState({ loading: false });

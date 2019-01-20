@@ -17,10 +17,17 @@ const Toolbar = styled.div`
 
 export default props => {
   const isAuthenticated = auth.isAuthenticated();
+  const user = auth.getUser();
   return (
     <Toolbar>
       <div style={{ flex: 1 }}>Dotabook</div>
       {!isAuthenticated && <Login />}
+      {isAuthenticated && (
+        <div>
+          <span>{user.username}</span>
+          <span>{user.note}</span>
+        </div>
+      )}
     </Toolbar>
   );
 };

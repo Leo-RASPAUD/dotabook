@@ -15,6 +15,7 @@ class MatchHistory extends React.PureComponent {
     loading: true,
     loadingDetails: false,
     matchDetails: null,
+    selectedMatchId: null,
   };
 
   componentDidMount = async () => {
@@ -22,7 +23,10 @@ class MatchHistory extends React.PureComponent {
     const {
       data: { getMatches: matches },
     } = await API.graphql(graphqlOperation(queries.getMatches, { profileId: auth.getUserId(), limit, offset }));
-    this.setState({ matches, loading: false });
+
+    const lastMatchId = matches[0].match_id;
+    await this.setState({ matches, loading: false, selectedMatchId: lastMatchId });
+    this.getMatchDetails({ id: lastMatchId });
   };
 
   loadData = async ({ isNext }) => {
@@ -47,7 +51,7 @@ class MatchHistory extends React.PureComponent {
   };
 
   getMatchDetails = async ({ id }) => {
-    await this.setState({ loadingDetails: true });
+    await this.setState({ loadingDetails: true, selectedMatchId: id });
     const {
       data: { getMatchDetails: data },
     } = await API.graphql(graphqlOperation(queries.getMatchDetails, { matchId: id, currentUserId: auth.getUserId() }));
@@ -78,21 +82,25 @@ class MatchHistory extends React.PureComponent {
   };
 
   render() {
-    const { matches, loading, offset, limit, matchDetails, loadingDetails } = this.state;
-    if (loading) {
-      return <div>Loading matches...</div>;
-    }
+    const { matches, loading, offset, limit, matchDetails, loadingDetails, selectedMatchId } = this.state;
     return (
       <div>
-        {matchDetails && (
-          <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
+        <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
+        {loading && <div>Loading matches...</div>}
+        {!loading && (
+          <>
+            <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
+            <MatchHistoryComponent
+              matches={matches}
+              getMatchDetails={this.getMatchDetails}
+              selectedMatchId={selectedMatchId}
+            />
+            <button onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
+              Previous page
+            </button>
+            <button onClick={() => this.loadData({ isNext: true })}>Next page</button>
+          </>
         )}
-        <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
-        <MatchHistoryComponent matches={matches} getMatchDetails={this.getMatchDetails} />
-        <button onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
-          Previous page
-        </button>
-        <button onClick={() => this.loadData({ isNext: true })}>Next page</button>
       </div>
     );
   }

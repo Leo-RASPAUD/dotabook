@@ -64,11 +64,12 @@ const Team = ({ name, players, updateNote }) => {
 class MatchDetails extends React.PureComponent {
   render() {
     const { loadingDetails, data, updateNote } = this.props;
-    const { players } = data;
-    if (loadingDetails || players.length === 0) {
-      return <div>Loading details...</div>;
+    console.log('ici', loadingDetails);
+    if (!data || loadingDetails || data.players.length === 0) {
+      return <div>Loading match details...</div>;
     }
 
+    const { players } = data;
     const dire = players.filter(player => !player.isRadiant);
     const radiant = players.filter(player => player.isRadiant);
 

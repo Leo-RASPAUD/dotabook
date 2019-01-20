@@ -1,7 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router';
 import auth from '../utils/auth';
-import UserDetails from '../components/UserDetails';
 import MatchHistory from '../components/MatchHistory';
 
 class Home extends React.PureComponent {
@@ -17,7 +15,6 @@ class Home extends React.PureComponent {
   render() {
     return (
       <>
-        <UserDetails />
         <MatchHistory />
         <button onClick={this.logout}>logout</button>
       </>
