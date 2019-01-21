@@ -37,6 +37,10 @@ const isMatchWon = (radiant_win, isRadiant) => (isRadiant && radiant_win) || (!i
 const MatchHistoryComponent = props => {
   const { matches, getMatchDetails, selectedMatchId } = props;
   const wonCount = matches.reduce((a, b) => a + isMatchWon(b.radiant_win, b.player_slot < 128), 0);
+  const matchCount = matches.length;
+  const killsAverage = (matches.reduce((a, b) => a + b.kills, 0) / matchCount).toFixed(2);
+  const deathsAverage = (matches.reduce((a, b) => a + b.deaths, 0) / matchCount).toFixed(2);
+  const assitsAverage = (matches.reduce((a, b) => a + b.assists, 0) / matchCount).toFixed(2);
   return (
     <Table>
       <thead>
@@ -45,7 +49,7 @@ const MatchHistoryComponent = props => {
           <th>Date</th>
           <th>{`Result ( W:${wonCount} / L:${matches.length - wonCount} )`}</th>
           <th>Duration</th>
-          <th>K / D / A</th>
+          <th>{`K (${killsAverage}) / D (${deathsAverage}) / A (${assitsAverage})`}</th>
         </tr>
       </thead>
       <tbody>
