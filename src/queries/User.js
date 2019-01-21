@@ -1,7 +1,7 @@
 import User from '../types/User';
 
-const getOpenIdUrl = `query getOpenIdUrl {
-    getOpenIdUrl
+const getOpenIdUrl = `query getOpenIdUrl($location: String!) {
+    getOpenIdUrl(location: $location)
 }`;
 
 const getUser = `query getUser($id: String!) {

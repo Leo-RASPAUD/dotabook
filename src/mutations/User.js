@@ -1,8 +1,8 @@
 import User from '../types/User';
 import UpdateNoteResult from '../types/UpdateNoteResult';
 
-const createUser = `mutation createUser($avatar: String!, $note: Int!, $username: String!, $id: String!) {
-    createUser(avatar: $avatar, note: $note, username: $username, id: $id) {
+const createUser = `mutation createUser($avatar: String!, $username: String!, $id: String!) {
+    createUser(avatar: $avatar, username: $username, id: $id) {
         ${User}
     }
   }`;

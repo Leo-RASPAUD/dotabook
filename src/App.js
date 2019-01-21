@@ -47,7 +47,6 @@ class App extends Component {
           username,
           avatar,
           id,
-          note: 0,
         };
         await API.graphql(graphqlOperation(mutations.createUser, userToCreate));
         window.localStorage.setItem(constants.LOCAL_STORAGE_KEY, JSON.stringify(userToCreate));

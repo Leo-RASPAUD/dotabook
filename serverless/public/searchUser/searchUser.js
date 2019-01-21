@@ -1,8 +1,5 @@
-const AWS = require('aws-sdk');
 const axios = require('axios');
 const dbUtils = require('../utils/db.utils');
-
-const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 const searchPlayersOpendota = async username => {
   const BASE_URL = 'https://api.opendota.com/api/search?q=';

@@ -28,3 +28,5 @@ functions:
     handler: getMatchDetails/getMatchDetails.handler
   searchUser:
     handler: searchUser/searchUser.handler
+  createUser:
+    handler: createUser/createUser.handler
