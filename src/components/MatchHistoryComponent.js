@@ -3,10 +3,13 @@ import styled from 'styled-components';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns/format';
 import time from '../utils/time';
+import colors from '../constants/colors';
 
 const Data = styled.td`
   min-width: 150px;
   text-align: center;
+  text-transform: uppercase;
+  color: ${props => (!props.status ? colors.white : props.isWon ? colors.success : colors.error)};
 `;
 
 const Table = styled.table`
@@ -57,7 +60,9 @@ const MatchHistoryComponent = props => {
                 <img src={`https://api.opendota.com${match.hero.img}`} alt="hero" height={50} width={100} />
               </td>
               <Data>{format(date, 'dd/MM/yyyy k:m')}</Data>
-              <Data>{isWon ? 'Won match' : 'Lost match'}</Data>
+              <Data status isWon={isWon}>
+                {isWon ? 'Won match' : 'Lost match'}
+              </Data>
               <Data>{time.secondsToHms(match.duration)}</Data>
               <Data>
                 {match.kills} / {match.deaths} / {match.assists}

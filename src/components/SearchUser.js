@@ -49,7 +49,7 @@ export default class SearchUser extends React.PureComponent {
               <div key={user.id}>
                 <div>{user.username}</div>
                 <div>{user.note}</div>
-                <img src={user.avatar} />
+                <img src={user.avatar} alt="avatar" />
               </div>
             ))}
         </Root>
