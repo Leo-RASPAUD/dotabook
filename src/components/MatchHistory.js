@@ -23,10 +23,11 @@ class MatchHistory extends React.PureComponent {
     const {
       data: { getMatches: matches },
     } = await API.graphql(graphqlOperation(queries.getMatches, { profileId: auth.getUserId(), limit, offset }));
-
-    const lastMatchId = matches[0].match_id;
-    await this.setState({ matches, loading: false, selectedMatchId: lastMatchId });
-    this.getMatchDetails({ id: lastMatchId });
+    if (matches.length > 0) {
+      const lastMatchId = matches[0].match_id;
+      await this.setState({ matches, loading: false, selectedMatchId: lastMatchId });
+      this.getMatchDetails({ id: lastMatchId });
+    }
   };
 
   loadData = async ({ isNext }) => {
