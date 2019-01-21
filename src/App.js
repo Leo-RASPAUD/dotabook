@@ -34,9 +34,15 @@ class App extends Component {
       this.setState({ loading: false, isAuth: true });
     } else {
       const parsed = window.location.href.split('&');
-
       if (parsed.length > 1 && !isAuth) {
-        const profileId = parsed[3].split('%2Fid%2F')[1];
+        let profileId;
+        parsed.forEach(a => {
+          const split = a.split('openid.identity=');
+          if (split.length > 1) {
+            const identity = split[1];
+            profileId = identity.split('%2Fid%2F')[1];
+          }
+        });
 
         const {
           data: { getUserProfile: user },

@@ -32,15 +32,18 @@ const RowWrapper = styled.tr`
   background-color: ${props => (props.isSelected ? 'rgba(33, 150, 243, 0.25)' : 'none')};
 `;
 
+const isMatchWon = (radiant_win, isRadiant) => (isRadiant && radiant_win) || (!isRadiant && !radiant_win);
+
 const MatchHistoryComponent = props => {
   const { matches, getMatchDetails, selectedMatchId } = props;
+  const wonCount = matches.reduce((a, b) => a + isMatchWon(b.radiant_win, b.player_slot < 128), 0);
   return (
     <Table>
       <thead>
         <tr>
           <th>Hero</th>
           <th>Date</th>
-          <th>Result</th>
+          <th>{`Result ( W:${wonCount} / L:${matches.length - wonCount} )`}</th>
           <th>Duration</th>
           <th>K / D / A</th>
         </tr>
@@ -49,7 +52,7 @@ const MatchHistoryComponent = props => {
         {matches.map(match => {
           const date = fromUnixTime(match.start_time);
           const isRadiant = match.player_slot < 128;
-          const isWon = (isRadiant && match.radiant_win) || (!isRadiant && !match.radiant_win);
+          const isWon = isMatchWon(match.radiant_win, isRadiant);
           return (
             <RowWrapper
               key={match.match_id}
