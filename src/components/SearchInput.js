@@ -1,19 +1,37 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaSearch } from 'react-icons/fa';
 import colors from '../constants/colors';
 
 const InputWrapper = styled.div`
-  display: flex;
-  align-items: center;
+  flex-direction: column;
+  width: 280px;
 `;
 
 const Label = styled.label`
-      margin-bottom: 10px;
-    text-transform: none;
-    color: ${colors.primary}
-    filter: grayscale(50%);
-    font-size: 25px;
+  font-size: 30px;
+  margin-bottom: 30px;
+  font-weight: 300;
+  text-transform: none;
+  color: ${colors.white};
+`;
+
+const TextInput = styled.input`
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: none;
+  width: 240px;
+`;
+
+const SubmitInput = styled.input`
+  width: 100%;
+  margin-top: 25px;
+  font-size: 15px;
+  padding: 8px 31px;
+  border-radius: 5px;
+  -webkit-appearance: none;
+  background: #0097fa;
+  color: white;
+  border: none;
 `;
 
 export default class SearchInputClass extends React.PureComponent {
@@ -40,8 +58,9 @@ export default class SearchInputClass extends React.PureComponent {
       <>
         <Label htmlFor={id}>{label}</Label>
         <InputWrapper>
-          <input type="text" id={id} onChange={this.updateInput} onKeyPress={this.onKeyPress} />
-          <FaSearch
+          <TextInput type="text" id={id} onChange={this.updateInput} onKeyPress={this.onKeyPress} />
+          <SubmitInput
+            type="submit"
             onClick={() => {
               if (inputValue.length === 0) return;
               searchFunction(inputValue);

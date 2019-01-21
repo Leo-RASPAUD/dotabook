@@ -1,8 +1,7 @@
 const openid = require('openid');
 
-const relyingParty = new openid.RelyingParty('http://localhost:3000/', null, true, false, []);
-
-module.exports.getUrl = async () => {
+module.exports.getUrl = async ({ location }) => {
+  const relyingParty = new openid.RelyingParty(location, null, true, false, []);
   return await new Promise(resolve => {
     relyingParty.authenticate('https://steamcommunity.com/openid', false, (err, authURL) => {
       resolve(authURL);

@@ -22,7 +22,6 @@ const Root = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0px 0px 40px -5px rgba(244, 67, 54, 0.75);
 `;
 
 export default class SearchUser extends React.PureComponent {
@@ -50,6 +49,7 @@ export default class SearchUser extends React.PureComponent {
               <div key={user.id}>
                 <div>{user.username}</div>
                 <div>{user.note}</div>
+                <img src={user.avatar} />
               </div>
             ))}
         </Root>

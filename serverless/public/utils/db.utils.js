@@ -38,9 +38,22 @@ const createUsers = async users => {
     })
     .promise();
 };
+const searchByIds = async ids => {
+  const result = await dynamoClient
+    .batchGet({
+      RequestItems: {
+        [constants.DOTABOOK_USER_TABLE]: {
+          Keys: ids,
+        },
+      },
+    })
+    .promise();
+  return result.Responses[constants.DOTABOOK_USER_TABLE];
+};
 
 module.exports = {
   getUser,
   searchUser,
   createUsers,
+  searchByIds,
 };

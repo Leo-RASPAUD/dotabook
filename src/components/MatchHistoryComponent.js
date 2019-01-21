@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns/format';
 import time from '../utils/time';
-import colors from '../constants/colors';
 
 const Data = styled.td`
   min-width: 150px;

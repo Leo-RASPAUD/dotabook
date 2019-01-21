@@ -10,6 +10,10 @@ const json = `&format=json`;
 
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
+const getIdOnly = player => ({
+  id: '' + player.account_id,
+});
+
 const getMatchHistory = async ({ matchId }) => {
   const BASE_URL = 'https://api.opendota.com/api/matches/';
   return axios.get(`${BASE_URL}${matchId}`);
@@ -32,33 +36,21 @@ const updateExistingPlayersWithLatestUsernames = updatedPlayersDetails => player
 
 const getPlayersDetails = async players => {
   const BASE_URL = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/';
-  const convertedIds = players.map(player => utils.convertSteamId64(player.id)).join(',');
+  const convertedIds = players.map(player => utils.convertSteamId64(player.account_id)).join(',');
   const results = await axios.get(`${BASE_URL}${apiKey}${json}&steamids=[${convertedIds}]`);
   const data = results.data.response.players;
   return data.map(player => ({ ...player, id: utils.convertSteamId32(player.steamid) }));
 };
 
 const updatePlayers = async ({ players, currentUser }) => {
-  const playersGetRequest = players.map(player => ({
-    id: '' + player.account_id,
-  }));
+  const existingPlayers = await dbUtils.searchByIds(players.map(getIdOnly));
+  const updatedPlayersDetails = await getPlayersDetails(players);
 
-  const result = await dynamoClient
-    .batchGet({
-      RequestItems: {
-        [constants.DOTABOOK_USER_TABLE]: {
-          Keys: playersGetRequest,
-        },
-      },
-    })
-    .promise();
-  const existingPlayers = result.Responses[constants.DOTABOOK_USER_TABLE];
-  const updatedPlayersDetails = await getPlayersDetails(existingPlayers);
   const udpatedExistingPlayers = existingPlayers.map(updateExistingPlayersWithLatestUsernames(updatedPlayersDetails));
 
-  const toUpdate = players.map(player => {
-    const isFind = udpatedExistingPlayers.find(a => a.id === '' + player.account_id);
-    const alreadyNoted = currentUser.notedUsers.find(a => a.id === '' + player.account_id);
+  const toUpdate = updatedPlayersDetails.map(player => {
+    const isFind = udpatedExistingPlayers.find(a => '' + a.id === '' + player.id);
+    const alreadyNoted = currentUser.notedUsers.find(a => a.id === '' + player.id);
     if (isFind) {
       if (alreadyNoted) {
         return {
@@ -73,16 +65,19 @@ const updatePlayers = async ({ players, currentUser }) => {
       };
     }
     return {
-      id: '' + player.account_id,
+      id: '' + player.id,
       note: 0,
       alreadyNoted: false,
       createdOn: Date.now(),
       updatedOn: Date.now(),
       username: player.personaname,
+      avatar: player.avatar,
       usernameLowercase: player.personaname.toLowerCase(),
       notedUsers: [],
     };
   });
+
+  console.log(JSON.stringify(toUpdate));
 
   await dbUtils.createUsers(toUpdate);
   return toUpdate;
