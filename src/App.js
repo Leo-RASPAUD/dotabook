@@ -7,7 +7,6 @@ import Home from './Home/Home';
 import Toolbar from './components/Toolbar';
 import constants from './constants/constants';
 import { API, graphqlOperation } from 'aws-amplify';
-import { SimpleImg } from 'react-simple-img';
 import mutations from './mutations/User';
 import queries from './queries/User';
 
