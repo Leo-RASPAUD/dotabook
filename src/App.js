@@ -7,15 +7,32 @@ import Home from './Home/Home';
 import Toolbar from './components/Toolbar';
 import constants from './constants/constants';
 import { API, graphqlOperation } from 'aws-amplify';
+import { SimpleImg } from 'react-simple-img';
 import mutations from './mutations/User';
 import queries from './queries/User';
+
+const Background = styled.div`
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-position: center center;
+    background-image: url('https://s3-ap-southeast-2.amazonaws.com/dotabook/background.jpg');
+    filter: grayscale(75%) blur(10px);
+    transform: scale(1.25);
+  }
+`;
 
 const RootWrapper = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(270deg, #242866, #03070b);
-  background-size: 400% 400%;
+  position: relative;
 `;
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -69,16 +86,18 @@ class App extends Component {
     }
     return (
       <Router>
-        <RootWrapper>
-          <Toolbar />
-          <div style={{ flex: 1 }}>
-            <Switch>
-              {!isAuth && <Route path="/" exact component={PublicHome} />}
-              <PrivateRoute path="/home" exact component={Home} />
-              <Redirect to={isAuth ? '/home' : '/'} />
-            </Switch>
-          </div>
-        </RootWrapper>
+        <Background>
+          <RootWrapper>
+            <Toolbar />
+            <div style={{ flex: 1 }}>
+              <Switch>
+                {!isAuth && <Route path="/" exact component={PublicHome} />}
+                <PrivateRoute path="/home" exact component={Home} />
+                <Redirect to={isAuth ? '/home' : '/'} />
+              </Switch>
+            </div>
+          </RootWrapper>
+        </Background>
       </Router>
     );
   }
