@@ -11,5 +11,5 @@ export default {
   aws_appsync_graphqlEndpoint: GRAPHQL_ENDPOINT,
   aws_appsync_region: REGION,
   aws_appsync_authenticationType: 'API_KEY',
-  aws_appsync_apiKey: 'da2-vg6pii5fuzgyzdjhervu4j2qsu',
+  aws_appsync_apiKey: 'da2-vfu3uwssazcg5hw42m4stzxhai',
 };
