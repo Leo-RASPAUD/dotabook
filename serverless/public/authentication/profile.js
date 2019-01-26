@@ -14,6 +14,7 @@ module.exports.handler = async ({ profileId }) => {
     return {
       ...user,
       username: user.personaname,
+      avatar: user.avatarFull,
       id: convertSteamId32(user.steamid),
     };
   } catch (error) {

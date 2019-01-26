@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import colors from '../constants/colors';
+import transitions from '../constants/transitions';
 
 const InputWrapper = styled.div`
   flex-direction: column;
@@ -29,9 +30,14 @@ const SubmitInput = styled.input`
   padding: 8px 31px;
   border-radius: 5px;
   -webkit-appearance: none;
-  background: #0097fa;
+  background: ${colors.primary};
+  transition: ${transitions.short};
   color: white;
   border: none;
+
+  &:hover {
+    background-color: ${colors.primary600};
+  }
 `;
 
 export default class SearchInputClass extends React.PureComponent {

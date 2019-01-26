@@ -6,6 +6,8 @@ import media from '../constants/media';
 import queries from '../queries/User';
 import units from '../constants/units';
 import FlexRowCenterDiv from './FlexRowCenterDiv';
+import Loader from './Loader';
+import SearchUserResults from './SearchUserResults';
 
 const Root = styled.div`
   @media ${media.fromXsmallScreen} {
@@ -43,15 +45,8 @@ export default class SearchUser extends React.PureComponent {
       <FlexRowCenterDiv>
         <Root>
           <SearchInput id="searchUser" searchFunction={this.searchUser} label="Search user" />
-          {loading && <div>searching...</div>}
-          {!loading &&
-            users.map(user => (
-              <div key={user.id}>
-                <div>{user.username}</div>
-                <div>{user.note}</div>
-                <img src={user.avatar} alt="avatar" />
-              </div>
-            ))}
+          {loading && <Loader withMargin />}
+          {!loading && <SearchUserResults users={users} />}
         </Root>
       </FlexRowCenterDiv>
     );

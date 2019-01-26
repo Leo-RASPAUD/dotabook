@@ -8,6 +8,8 @@ const margin = toRem(25);
 const marginSmall = toRem(10);
 const marginIcon = toRem(10);
 
+const borderRadius = toRem(5);
+
 export default {
   margin,
   padding,
@@ -15,4 +17,5 @@ export default {
   paddingSmall,
   marginSmall,
   paddingLarge,
+  borderRadius,
 };

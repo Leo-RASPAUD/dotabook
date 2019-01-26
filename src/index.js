@@ -4,7 +4,9 @@ import Amplify from 'aws-amplify';
 import amplifyConfig from './config/amplify';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { initSimpleImg } from 'react-simple-img';
 
+initSimpleImg();
 Amplify.configure(amplifyConfig);
 ReactDOM.render(<App />, document.getElementById('root'));
 
