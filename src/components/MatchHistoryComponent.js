@@ -72,7 +72,7 @@ const MatchHistoryComponent = props => {
                   placeholder={'#050911'}
                 />
               </td>
-              <Data>{format(date, 'dd/MM/yyyy k:m')}</Data>
+              <Data>{format(date, 'dd/MM/yyyy kk:mm')}</Data>
               <Data status isWon={isWon}>
                 {isWon ? 'Won match' : 'Lost match'}
               </Data>
