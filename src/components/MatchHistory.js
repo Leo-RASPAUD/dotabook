@@ -1,11 +1,25 @@
 import React from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
+import styled from 'styled-components';
 import queries from '../queries/Matches';
 import auth from '../utils/auth';
 import MatchDetails from './MatchDetails';
 import DropdownDisplayCount from './DropdownDisplayCount';
+import Loader from './Loader';
 import MatchHistoryComponent from './MatchHistoryComponent';
 import mutations from '../mutations/User';
+import units from '../constants/units';
+
+const Root = styled.div`
+  display: flex;
+`;
+
+const HistoryWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: ${units.margin};
+`;
 
 class MatchHistory extends React.PureComponent {
   state = {
@@ -85,24 +99,31 @@ class MatchHistory extends React.PureComponent {
   render() {
     const { matches, loading, offset, limit, matchDetails, loadingDetails, selectedMatchId } = this.state;
     return (
-      <div>
-        <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
-        {loading && <div>Loading matches...</div>}
+      <Root>
+        {loading && (
+          <div>
+            <div>Loading matches...</div>
+            <Loader />
+          </div>
+        )}
         {!loading && (
           <>
-            <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
-            <MatchHistoryComponent
-              matches={matches}
-              getMatchDetails={this.getMatchDetails}
-              selectedMatchId={selectedMatchId}
-            />
-            <button onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
-              Previous page
-            </button>
-            <button onClick={() => this.loadData({ isNext: true })}>Next page</button>
+            <HistoryWrapper>
+              <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
+              <MatchHistoryComponent
+                matches={matches}
+                getMatchDetails={this.getMatchDetails}
+                selectedMatchId={selectedMatchId}
+              />
+              <button onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
+                Previous page
+              </button>
+              <button onClick={() => this.loadData({ isNext: true })}>Next page</button>
+            </HistoryWrapper>
+            <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
           </>
         )}
-      </div>
+      </Root>
     );
   }
 }

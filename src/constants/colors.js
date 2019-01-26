@@ -1,6 +1,7 @@
 export default {
   success: 'green',
-  error: 'red',
+  error: '#F44336',
+  error800: '#c62828',
   white: 'white',
   primary: '#2196f3',
   primary50: '#E3F2FD',

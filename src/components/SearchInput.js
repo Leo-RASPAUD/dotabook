@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import colors from '../constants/colors';
 import transitions from '../constants/transitions';
+import { FaTimes } from 'react-icons/fa';
 
 const InputWrapper = styled.div`
   flex-direction: column;
@@ -40,6 +41,22 @@ const SubmitInput = styled.input`
   }
 `;
 
+const TextWrapper = styled.div`
+  position: relative;
+`;
+
+const ClearIcon = styled.div`
+  position: absolute;
+  top: 5px;
+  color: ${colors.error}
+  right: 10px;
+  cursor: pointer;
+  transition: ${transitions.default};
+  &:hover {
+    color: ${colors.error800}
+  }
+`;
+
 export default class SearchInputClass extends React.PureComponent {
   state = {
     inputValue: '',
@@ -59,12 +76,17 @@ export default class SearchInputClass extends React.PureComponent {
 
   render() {
     const { inputValue } = this.state;
-    const { searchFunction, id, label } = this.props;
+    const { searchFunction, id, label, clear } = this.props;
     return (
       <>
         <Label htmlFor={id}>{label}</Label>
         <InputWrapper>
-          <TextInput type="text" id={id} onChange={this.updateInput} onKeyPress={this.onKeyPress} />
+          <TextWrapper>
+            <TextInput type="text" id={id} onChange={this.updateInput} onKeyPress={this.onKeyPress} />
+            <ClearIcon onClick={clear}>
+              <FaTimes size={'1.5rem'} />
+            </ClearIcon>
+          </TextWrapper>
           <SubmitInput
             type="submit"
             onClick={() => {

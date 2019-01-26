@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { FaThumbsUp, FaThumbsDown, FaAward } from 'react-icons/fa';
 import colors from '../constants/colors';
 import auth from '../utils/auth';
+import Loader from './Loader';
+import units from '../constants/units';
 
 const TeamData = styled.div`
   display: flex;
@@ -11,6 +13,10 @@ const TeamData = styled.div`
 const Teams = styled.div`
   display: flex;
   justify-content: space-around;
+`;
+
+const WithMargin = styled.div`
+  margin: ${units.margin};
 `;
 
 const Data = styled.div`
@@ -65,7 +71,12 @@ class MatchDetails extends React.PureComponent {
   render() {
     const { loadingDetails, data, updateNote } = this.props;
     if (!data || loadingDetails || data.players.length === 0) {
-      return <div>Loading match details...</div>;
+      return (
+        <WithMargin>
+          <div>Loading match details...</div>
+          <Loader />
+        </WithMargin>
+      );
     }
 
     const { players } = data;
@@ -73,10 +84,12 @@ class MatchDetails extends React.PureComponent {
     const radiant = players.filter(player => player.isRadiant);
 
     return (
-      <Teams>
-        <Team name="Dire" players={dire} updateNote={updateNote} />
-        <Team name="Radiant" players={radiant} updateNote={updateNote} />
-      </Teams>
+      <WithMargin>
+        <Teams>
+          <Team name="Dire" players={dire} updateNote={updateNote} />
+          <Team name="Radiant" players={radiant} updateNote={updateNote} />
+        </Teams>
+      </WithMargin>
     );
   }
 }
