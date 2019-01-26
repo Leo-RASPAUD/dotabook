@@ -82,6 +82,7 @@ export default class SearchInputClass extends React.PureComponent {
 
   render() {
     const { inputValue } = this.state;
+    const isTyped = inputValue.length > 0;
     const { searchFunction, id, label, displayClear } = this.props;
     return (
       <>
@@ -95,7 +96,7 @@ export default class SearchInputClass extends React.PureComponent {
               onKeyPress={this.onKeyPress}
               value={inputValue}
             />
-            {displayClear && (
+            {(isTyped || displayClear) && (
               <ClearIcon onClick={this.clearFunction}>
                 <FaTimes size={'1.5rem'} />
               </ClearIcon>
