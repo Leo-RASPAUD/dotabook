@@ -4,6 +4,7 @@ import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns/format';
 import time from '../utils/time';
 import colors from '../constants/colors';
+import { SimpleImg } from 'react-simple-img';
 
 const Data = styled.td`
   min-width: 150px;
@@ -23,7 +24,7 @@ const Table = styled.table`
   }
   & tr td,
   th {
-    box-shadow: 2px 0 0 0 #888, 0 2px 0 0 #888, 2px 2px 0 0 #888, 2px 0 0 0 #888 inset, 0 2px 0 0 #888 inset;
+    box-shadow: 0 2px 0 0 #2196f35c;
     padding: 10px;
   }
 `;
@@ -64,7 +65,12 @@ const MatchHistoryComponent = props => {
               isSelected={selectedMatchId === match.match_id}
             >
               <td>
-                <img src={`https://api.opendota.com${match.hero.img}`} alt="hero" height={50} width={100} />
+                <SimpleImg
+                  height={50}
+                  width={100}
+                  src={`https://api.opendota.com${match.hero.img}`}
+                  placeholder={'#050911'}
+                />
               </td>
               <Data>{format(date, 'dd/MM/yyyy k:m')}</Data>
               <Data status isWon={isWon}>

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaThumbsUp, FaThumbsDown, FaAward } from 'react-icons/fa';
+import { SimpleImg } from 'react-simple-img';
 import colors from '../constants/colors';
 import auth from '../utils/auth';
 import Loader from './Loader';
@@ -33,7 +34,12 @@ const Team = ({ name, players, updateNote }) => {
         const disabled = '' + player.account_id === auth.getUserId();
         return (
           <TeamData key={player.player_slot}>
-            <img src={`https://api.opendota.com${player.hero.img}`} alt="hero" height={50} width={100} />
+            <SimpleImg
+              height={50}
+              width={100}
+              src={`https://api.opendota.com${player.hero.img}`}
+              placeholder={'#050911'}
+            />
             <Data>{player.username || 'Anonymous'}</Data>
             <Data>
               {player.kills} / {player.deaths} / {player.assists}
