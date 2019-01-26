@@ -8,6 +8,7 @@ import units from '../constants/units';
 import FlexRowCenterDiv from './FlexRowCenterDiv';
 import Loader from './Loader';
 import SearchUserResults from './SearchUserResults';
+import { Animate } from 'react-simple-animate';
 
 const Root = styled.div`
   @media ${media.fromXsmallScreen} {
@@ -56,7 +57,12 @@ export default class SearchUser extends React.PureComponent {
             displayClear={users.length > 0}
           />
           {loading && <Loader withMargin />}
-          {!loading && <SearchUserResults users={users} />}
+
+          {!loading && (
+            <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
+              <SearchUserResults users={users} />
+            </Animate>
+          )}
         </Root>
       </FlexRowCenterDiv>
     );

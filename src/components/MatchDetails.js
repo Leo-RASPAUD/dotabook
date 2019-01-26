@@ -6,6 +6,7 @@ import colors from '../constants/colors';
 import auth from '../utils/auth';
 import Loader from './Loader';
 import units from '../constants/units';
+import { Animate } from 'react-simple-animate';
 
 const TeamData = styled.div`
   display: flex;
@@ -90,12 +91,14 @@ class MatchDetails extends React.PureComponent {
     const radiant = players.filter(player => player.isRadiant);
 
     return (
-      <WithMargin>
-        <Teams>
-          <Team name="Dire" players={dire} updateNote={updateNote} />
-          <Team name="Radiant" players={radiant} updateNote={updateNote} />
-        </Teams>
-      </WithMargin>
+      <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
+        <WithMargin>
+          <Teams>
+            <Team name="Dire" players={dire} updateNote={updateNote} />
+            <Team name="Radiant" players={radiant} updateNote={updateNote} />
+          </Teams>
+        </WithMargin>
+      </Animate>
     );
   }
 }

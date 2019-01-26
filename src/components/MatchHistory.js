@@ -9,6 +9,7 @@ import Loader from './Loader';
 import MatchHistoryComponent from './MatchHistoryComponent';
 import mutations from '../mutations/User';
 import units from '../constants/units';
+import { Animate } from 'react-simple-animate';
 
 const Root = styled.div`
   display: flex;
@@ -99,7 +100,7 @@ class MatchHistory extends React.PureComponent {
   render() {
     const { matches, loading, offset, limit, matchDetails, loadingDetails, selectedMatchId } = this.state;
     return (
-      <Root>
+      <>
         {loading && (
           <div>
             <div>Loading matches...</div>
@@ -107,23 +108,25 @@ class MatchHistory extends React.PureComponent {
           </div>
         )}
         {!loading && (
-          <>
-            <HistoryWrapper>
-              <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
-              <MatchHistoryComponent
-                matches={matches}
-                getMatchDetails={this.getMatchDetails}
-                selectedMatchId={selectedMatchId}
-              />
-              <button onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
-                Previous page
-              </button>
-              <button onClick={() => this.loadData({ isNext: true })}>Next page</button>
-            </HistoryWrapper>
-            <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
-          </>
+          <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
+            <Root>
+              <HistoryWrapper>
+                <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
+                <MatchHistoryComponent
+                  matches={matches}
+                  getMatchDetails={this.getMatchDetails}
+                  selectedMatchId={selectedMatchId}
+                />
+                <button onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
+                  Previous page
+                </button>
+                <button onClick={() => this.loadData({ isNext: true })}>Next page</button>
+              </HistoryWrapper>
+              <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
+            </Root>
+          </Animate>
         )}
-      </Root>
+      </>
     );
   }
 }
