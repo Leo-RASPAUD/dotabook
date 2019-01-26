@@ -74,18 +74,32 @@ export default class SearchInputClass extends React.PureComponent {
     }
   };
 
+  clearFunction = () => {
+    const { clear } = this.props;
+    clear();
+    this.setState({ inputValue: '' });
+  };
+
   render() {
     const { inputValue } = this.state;
-    const { searchFunction, id, label, clear } = this.props;
+    const { searchFunction, id, label, displayClear } = this.props;
     return (
       <>
         <Label htmlFor={id}>{label}</Label>
         <InputWrapper>
           <TextWrapper>
-            <TextInput type="text" id={id} onChange={this.updateInput} onKeyPress={this.onKeyPress} />
-            <ClearIcon onClick={clear}>
-              <FaTimes size={'1.5rem'} />
-            </ClearIcon>
+            <TextInput
+              type="text"
+              id={id}
+              onChange={this.updateInput}
+              onKeyPress={this.onKeyPress}
+              value={inputValue}
+            />
+            {displayClear && (
+              <ClearIcon onClick={this.clearFunction}>
+                <FaTimes size={'1.5rem'} />
+              </ClearIcon>
+            )}
           </TextWrapper>
           <SubmitInput
             type="submit"

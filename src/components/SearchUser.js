@@ -48,7 +48,13 @@ export default class SearchUser extends React.PureComponent {
     return (
       <FlexRowCenterDiv>
         <Root>
-          <SearchInput id="searchUser" searchFunction={this.searchUser} label="Search user" clear={this.clear} />
+          <SearchInput
+            id="searchUser"
+            searchFunction={this.searchUser}
+            label="Search user"
+            clear={this.clear}
+            displayClear={users.length > 0}
+          />
           {loading && <Loader withMargin />}
           {!loading && <SearchUserResults users={users} />}
         </Root>
