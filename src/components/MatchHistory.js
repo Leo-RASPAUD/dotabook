@@ -8,19 +8,26 @@ import DropdownDisplayCount from './DropdownDisplayCount';
 import Loader from './Loader';
 import MatchHistoryComponent from './MatchHistoryComponent';
 import mutations from '../mutations/User';
-import units from '../constants/units';
 import { Animate } from 'react-simple-animate';
+import units from '../constants/units';
 
 const Root = styled.div`
   display: flex;
-  margin-top: ${units.margin};
+  flex-direction: column;
 `;
 
 const HistoryWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: ${units.margin};
+`;
+
+const LoaderWrapper = styled.div`
+  margin: ${units.margin} 0;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 class MatchHistory extends React.PureComponent {
@@ -36,13 +43,21 @@ class MatchHistory extends React.PureComponent {
 
   componentDidMount = async () => {
     const { offset, limit } = this.state;
+
     const {
       data: { getMatches: matches },
     } = await API.graphql(graphqlOperation(queries.getMatches, { profileId: auth.getUserId(), limit, offset }));
     if (matches.length > 0) {
       const lastMatchId = matches[0].match_id;
+      const {
+        data: { getMatchDetails: data },
+      } = await API.graphql(
+        graphqlOperation(queries.getMatchDetails, { matchId: lastMatchId, currentUserId: auth.getUserId() }),
+      );
       await this.setState({ matches, loading: false, selectedMatchId: lastMatchId });
-      this.getMatchDetails({ id: lastMatchId });
+      this.setState({ loading: false, matchDetails: data, matches });
+    } else {
+      this.setState({ loading: false, matches: [] });
     }
   };
 
@@ -103,14 +118,16 @@ class MatchHistory extends React.PureComponent {
     return (
       <Root>
         {loading && (
-          <div>
-            <div>Loading matches...</div>
-            <Loader />
-          </div>
+          <LoaderWrapper>
+            <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
+              <Loader message={'Loading matches'} />
+            </Animate>
+          </LoaderWrapper>
         )}
         {!loading && (
           <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
             <Root>
+              <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
               <HistoryWrapper>
                 <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
                 <MatchHistoryComponent
@@ -123,7 +140,6 @@ class MatchHistory extends React.PureComponent {
                 </button>
                 <button onClick={() => this.loadData({ isNext: true })}>Next page</button>
               </HistoryWrapper>
-              <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
             </Root>
           </Animate>
         )}
