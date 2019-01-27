@@ -5,4 +5,6 @@ export default {
   fromMidLargeScreen: '(min-width: 996px)',
   fromLargeScreen: '(min-width: 1024px)',
   fromXlargeScreen: '(min-width: 1280px)',
+  fromXXlargeScreen: '(min-width: 1920px)',
+  fromXXXlargeScreen: '(min-width: 2560px)',
 };

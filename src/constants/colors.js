@@ -1,5 +1,5 @@
 export default {
-  success: 'green',
+  success: '#4caf50',
   error: '#F44336',
   error800: '#c62828',
   white: 'white',
