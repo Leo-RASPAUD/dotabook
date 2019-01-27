@@ -57,6 +57,7 @@ const Root = styled.div`
 `;
 
 const Title = styled.div`
+  user-select: none;
   font-size: 30px;
   color: white;
   text-shadow: 0px 0px 20px ${props => (props.isDire ? colors.error : colors.success)};

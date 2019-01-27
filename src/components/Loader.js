@@ -12,6 +12,7 @@ const Root = styled.div`
   margin-top: ${props => (props.withMargin ? '25px' : 0)};
   display: flex;
   align-items: center;
+  user-select: none;
 `;
 
 export default ({ withMargin, message }) => (

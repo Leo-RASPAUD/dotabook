@@ -7,6 +7,7 @@ import MatchDetails from './MatchDetails';
 import DropdownDisplayCount from './DropdownDisplayCount';
 import Loader from './Loader';
 import MatchHistoryComponent from './MatchHistoryComponent';
+import Button from './Button';
 import mutations from '../mutations/User';
 import { Animate } from 'react-simple-animate';
 import units from '../constants/units';
@@ -28,6 +29,10 @@ const LoaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const Buttons = styled.div`
+  display: flex;
 `;
 
 class MatchHistory extends React.PureComponent {
@@ -129,16 +134,20 @@ class MatchHistory extends React.PureComponent {
             <Root>
               <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
               <HistoryWrapper>
-                <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
+                <Buttons>
+                  <DropdownDisplayCount onChange={this.changeNumberDisplayed} limit={limit} />
+                  <button variant="primary" onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
+                    Previous page
+                  </button>
+                  <button variant="primary" onClick={() => this.loadData({ isNext: true })}>
+                    Next page
+                  </button>
+                </Buttons>
                 <MatchHistoryComponent
                   matches={matches}
                   getMatchDetails={this.getMatchDetails}
                   selectedMatchId={selectedMatchId}
                 />
-                <button onClick={() => this.loadData({ isNext: false })} disabled={offset === 0}>
-                  Previous page
-                </button>
-                <button onClick={() => this.loadData({ isNext: true })}>Next page</button>
               </HistoryWrapper>
             </Root>
           </Animate>

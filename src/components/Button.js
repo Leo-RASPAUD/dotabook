@@ -11,8 +11,9 @@ const Button = styled.button`
   padding: ${units.paddingSmall} ${units.padding};
   border-radius: 5px;
   margin-right: ${units.margin};
-  background-color: ${props => (props.variant === 'primary' ? colors.primary : 'red')};
+  background-color: ${props => (props.disabled ? 'gray' : props.variant === 'primary' ? colors.primary : 'red')};
   text-transform: uppercase;
+  pointer-events: ${props => (props.disabled ? 'none' : 'inherit')}
   transition: ${transitions.short};
   color: white;
   font-weight: 500;
@@ -24,8 +25,8 @@ const Button = styled.button`
   }
 `;
 
-export default ({ children, onClick, variant }) => (
-  <Button variant={variant} onClick={onClick}>
+export default ({ children, onClick, variant, disabled }) => (
+  <Button variant={variant} onClick={onClick} disabled={disabled}>
     {children}
   </Button>
 );
