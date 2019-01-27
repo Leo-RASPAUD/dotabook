@@ -29,6 +29,17 @@ const Table = styled.table`
   }
 `;
 
+const MatchId = styled.div`
+  font-size: 12px;
+  opacity: 0.75;
+  text-align: left;
+  margin-bottom: 5px;
+`;
+
+const TextAlignLeft = styled.div`
+  text-align: left;
+`;
+
 const RowWrapper = styled.tr`
   background-color: ${props => (props.isSelected ? 'rgba(33, 150, 243, 0.25)' : 'none')};
 `;
@@ -72,7 +83,10 @@ const MatchHistoryComponent = props => {
                   placeholder={'#050911'}
                 />
               </td>
-              <Data>{format(date, 'dd/MM/yyyy kk:mm')}</Data>
+              <Data>
+                <MatchId>{match.match_id}</MatchId>
+                <TextAlignLeft>{format(date, 'dd/MM/yyyy kk:mm')}</TextAlignLeft>
+              </Data>
               <Data status isWon={isWon}>
                 {isWon ? 'Won match' : 'Lost match'}
               </Data>

@@ -24,8 +24,9 @@ export default props => {
       {!isAuthenticated && <Login />}
       {isAuthenticated && (
         <div>
-          <span>{user.username}</span>
-          <span>{user.note}</span>
+          <div>Search</div>
+          <div>{user.username}</div>
+          <div>{user.note}</div>
         </div>
       )}
     </Toolbar>

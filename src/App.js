@@ -54,8 +54,10 @@ class App extends Component {
           avatar,
           id,
         };
-        await API.graphql(graphqlOperation(mutations.createUser, userToCreate));
-        window.localStorage.setItem(constants.LOCAL_STORAGE_KEY, JSON.stringify(userToCreate));
+        const {
+          data: { createUser: createdUser },
+        } = await API.graphql(graphqlOperation(mutations.createUser, userToCreate));
+        window.localStorage.setItem(constants.LOCAL_STORAGE_KEY, JSON.stringify(createdUser));
         this.setState({ loading: false, isAuth: true });
       }
       this.setState({ loading: false });
