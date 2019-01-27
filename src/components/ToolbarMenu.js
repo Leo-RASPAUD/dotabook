@@ -1,24 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
-import MenuModal from './MenuModal';
+import Modal from './Modal';
 import LogoutModal from './LogoutModal';
-import transitions from '../constants/transitions';
-import colors from '../constants/colors';
 import { FaEllipsisV } from 'react-icons/fa';
-
-const Root = styled.div`
-  position: relative;
-  width: 75px;
-  display: flex;
-  justify-content: center;
-  transition: ${transitions.default};
-  &:hover {
-    color: ${colors.primary};
-  }
-`;
 
 const Icon = styled(FaEllipsisV)`
   cursor: pointer;
+  position: relative;
+  width: 25px;
+  margin: 0 25px;
+  display: flex;
+  justify-content: center;
 `;
 
 export default class Login extends React.PureComponent {
@@ -51,13 +43,11 @@ export default class Login extends React.PureComponent {
     return (
       <>
         <div ref={node => (this.node = node)}>
-          <MenuModal isOpen={isModalOpened}>
-            <LogoutModal />
-          </MenuModal>
+          <Modal isOpen={isModalOpened}>
+            <LogoutModal toggleModal={this.toggleModal} />
+          </Modal>
         </div>
-        <Root>
-          <Icon onClick={() => this.toggleModal(!isModalOpened)} />
-        </Root>
+        <Icon onClick={() => this.toggleModal(!isModalOpened)} />
       </>
     );
   }

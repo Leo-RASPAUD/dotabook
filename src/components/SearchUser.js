@@ -58,7 +58,7 @@ export default class SearchUser extends React.PureComponent {
           {loading && <Loader withMargin />}
 
           {!loading && (
-            <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
+            <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1, width: '100%' }}>
               <SearchUserResults users={users} />
             </Animate>
           )}

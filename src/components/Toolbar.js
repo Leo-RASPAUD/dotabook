@@ -4,11 +4,21 @@ import colors from '../constants/colors';
 import units from '../constants/units';
 import auth from '../utils/auth';
 import Login from './Login';
-import Logout from './Logout';
+import ToolbarMenu from './ToolbarMenu';
 import ReactTooltip from 'react-tooltip';
 import { Link } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 import transitions from '../constants/transitions';
+import media from '../constants/media';
+
+const mediaQueries = `
+@media ${media.fromXsmallScreen} {
+  display: none;
+}
+
+@media ${media.fromMediumScreen} {
+  display: flex;
+}`;
 
 const Toolbar = styled.div`
   color: ${colors.white}
@@ -28,6 +38,7 @@ const Links = styled.div`
 
 const Profile = styled.div`
   display: flex;
+  align-items: center;
   margin: 0 0 0 ${units.margin};
 `;
 
@@ -36,6 +47,7 @@ const WithPadding = styled.div`
 `;
 
 const Note = styled.div`
+  ${mediaQueries};
   border-radius: 5px;
   border: 1px solid white;
   padding: 0 ${units.paddingSmall};
@@ -46,6 +58,7 @@ const Note = styled.div`
 `;
 
 const CustomLinks = styled(Link)`
+  ${mediaQueries};
   margin: 0 ${units.marginSmall};
   color: white;
   border-bottom: 1px solid white;
@@ -78,7 +91,7 @@ export default props => {
             <FaUser size={'1.5rem'} />
             <WithPadding>{user.username}</WithPadding>
           </Profile>
-          <Logout />
+          <ToolbarMenu />
         </Links>
       )}
     </Toolbar>
