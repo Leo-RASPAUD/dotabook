@@ -13,6 +13,7 @@ import { Animate } from 'react-simple-animate';
 
 const Root = styled.div`
   display: flex;
+  margin-top: ${units.margin};
 `;
 
 const HistoryWrapper = styled.div`
@@ -100,7 +101,7 @@ class MatchHistory extends React.PureComponent {
   render() {
     const { matches, loading, offset, limit, matchDetails, loadingDetails, selectedMatchId } = this.state;
     return (
-      <>
+      <Root>
         {loading && (
           <div>
             <div>Loading matches...</div>
@@ -126,7 +127,7 @@ class MatchHistory extends React.PureComponent {
             </Root>
           </Animate>
         )}
-      </>
+      </Root>
     );
   }
 }

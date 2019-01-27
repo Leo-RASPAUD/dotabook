@@ -5,6 +5,7 @@ import authUtils from './utils/auth';
 import PublicHome from './PublicHome/PublicHome';
 import Home from './Home/Home';
 import Toolbar from './components/Toolbar';
+import Search from './Search/Search';
 import constants from './constants/constants';
 import { API, graphqlOperation } from 'aws-amplify';
 import mutations from './mutations/User';
@@ -77,6 +78,7 @@ class App extends Component {
             <Switch>
               {!isAuth && <Route path="/" exact component={PublicHome} />}
               <PrivateRoute path="/home" exact component={Home} />
+              <PrivateRoute path="/user/search" exact component={Search} />
               <Redirect to={isAuth ? '/home' : '/'} />
             </Switch>
           </div>

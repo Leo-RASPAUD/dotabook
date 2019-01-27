@@ -20,7 +20,6 @@ const Root = styled.div`
   }
 
   margin: ${units.margin};
-  padding: ${units.paddingLarge};
   border-radius: 10px;
   display: flex;
   flex-direction: column;

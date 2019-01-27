@@ -79,7 +79,7 @@ export default props => {
         <WrapperNote data-tip data-for="note">
           {user.note >= 0 && <FaThumbsUp color={user.note > 0 ? colors.success : 'gray'} size={'1.5em'} />}
           {user.note < 0 && <FaThumbsDown color={colors.error} size={'1.5em'} />}
-          <div data-tip>{user.note}</div>
+          <div>{user.note}</div>
           <ReactTooltip id="note" place="right" type="info" effect="solid">
             <span>User behaviour note</span>
           </ReactTooltip>

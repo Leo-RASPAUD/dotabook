@@ -4,6 +4,11 @@ import colors from '../constants/colors';
 import units from '../constants/units';
 import auth from '../utils/auth';
 import Login from './Login';
+import Logout from './Logout';
+import ReactTooltip from 'react-tooltip';
+import { Link } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
+import transitions from '../constants/transitions';
 
 const Toolbar = styled.div`
   color: ${colors.white}
@@ -13,6 +18,43 @@ const Toolbar = styled.div`
   display: flex;
   align-items: center;
   padding-left: ${units.padding};
+  font-size: 18px;
+`;
+
+const Links = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Profile = styled.div`
+  display: flex;
+  margin: 0 0 0 ${units.margin};
+`;
+
+const WithPadding = styled.div`
+  padding-left: ${units.padding};
+`;
+
+const Note = styled.div`
+  border-radius: 5px;
+  border: 1px solid white;
+  padding: 0 ${units.paddingSmall};
+  margin: 0 0 0 ${units.margin};
+  color: ${props => (props.note >= 0 ? colors.success : colors.error)};
+  background: white;
+  user-select: none;
+`;
+
+const CustomLinks = styled(Link)`
+  margin: 0 ${units.marginSmall};
+  color: white;
+  border-bottom: 1px solid white;
+  text-decoration: none;
+  transition: ${transitions.default};
+  &:hover {
+    color: ${colors.primary};
+    border-bottom: 1px solid ${colors.primary};
+  }
 `;
 
 export default props => {
@@ -23,11 +65,21 @@ export default props => {
       <div style={{ flex: 1 }}>Dotabook</div>
       {!isAuthenticated && <Login />}
       {isAuthenticated && (
-        <div>
-          <div>Search</div>
-          <div>{user.username}</div>
-          <div>{user.note}</div>
-        </div>
+        <Links>
+          <CustomLinks to="/home">Home</CustomLinks>
+          <CustomLinks to="/user/search">Search</CustomLinks>
+          <Note note={user.note} data-tip data-for="note">
+            {user.note}
+            <ReactTooltip id="note" place="bottom" type="info" effect="solid">
+              <span>User behaviour note</span>
+            </ReactTooltip>
+          </Note>
+          <Profile>
+            <FaUser size={'1.5rem'} />
+            <WithPadding>{user.username}</WithPadding>
+          </Profile>
+          <Logout />
+        </Links>
       )}
     </Toolbar>
   );
