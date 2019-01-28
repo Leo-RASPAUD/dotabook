@@ -44,6 +44,7 @@ class MatchHistory extends React.PureComponent {
     loadingDetails: false,
     matchDetails: null,
     selectedMatchId: null,
+    loadingMore: false,
   };
 
   componentDidMount = async () => {
@@ -59,15 +60,14 @@ class MatchHistory extends React.PureComponent {
       } = await API.graphql(
         graphqlOperation(queries.getMatchDetails, { matchId: lastMatchId, currentUserId: auth.getUserId() }),
       );
-      await this.setState({ matches, loading: false, selectedMatchId: lastMatchId });
-      this.setState({ loading: false, matchDetails: data, matches });
+      this.setState({ loading: false, matchDetails: data, matches, selectedMatchId: lastMatchId });
     } else {
       this.setState({ loading: false, matches: [] });
     }
   };
 
   loadData = async ({ isNext }) => {
-    this.setState({ loading: true });
+    this.setState({ loadingMore: true });
     const { offset, limit } = this.state;
     const newOffset = isNext ? offset + limit : offset - limit;
     const {
@@ -75,16 +75,38 @@ class MatchHistory extends React.PureComponent {
     } = await API.graphql(
       graphqlOperation(queries.getMatches, { profileId: auth.getUserId(), offset: newOffset, limit }),
     );
-    this.setState({ offset: newOffset, matches, loading: false });
+
+    if (matches.length > 0) {
+      const lastMatchId = matches[0].match_id;
+      const {
+        data: { getMatchDetails: data },
+      } = await API.graphql(
+        graphqlOperation(queries.getMatchDetails, { matchId: lastMatchId, currentUserId: auth.getUserId() }),
+      );
+      this.setState({ offset: newOffset, matches, loadingMore: false, matchDetails: data });
+    } else {
+      this.setState({ offset: newOffset, matches, loadingMore: false });
+    }
   };
 
   changeNumberDisplayed = async event => {
     const limit = event.target.value;
-    await this.setState({ limit, loading: true, matchDetails: null });
+    await this.setState({ limit, loadingMore: true });
     const {
       data: { getMatches: matches },
     } = await API.graphql(graphqlOperation(queries.getMatches, { profileId: auth.getUserId(), offset: 0, limit }));
-    this.setState({ matches, loading: false, offset: 0, limit });
+
+    if (matches.length > 0) {
+      const lastMatchId = matches[0].match_id;
+      const {
+        data: { getMatchDetails: data },
+      } = await API.graphql(
+        graphqlOperation(queries.getMatchDetails, { matchId: lastMatchId, currentUserId: auth.getUserId() }),
+      );
+      this.setState({ matches, loadingMore: false, matchDetails: data, offset: 0, limit });
+    } else {
+      this.setState({ matches, loadingMore: false, offset: 0, limit });
+    }
   };
 
   getMatchDetails = async ({ id }) => {
@@ -119,7 +141,9 @@ class MatchHistory extends React.PureComponent {
   };
 
   render() {
-    const { matches, loading, offset, limit, matchDetails, loadingDetails, selectedMatchId } = this.state;
+    const { matches, loading, offset, limit, matchDetails, loadingDetails, selectedMatchId, loadingMore } = this.state;
+
+    // TODO: Improve loadings
     return (
       <Root>
         {loading && (
@@ -143,11 +167,20 @@ class MatchHistory extends React.PureComponent {
                     Next page
                   </button>
                 </Buttons>
-                <MatchHistoryComponent
-                  matches={matches}
-                  getMatchDetails={this.getMatchDetails}
-                  selectedMatchId={selectedMatchId}
-                />
+                {loadingMore && (
+                  <LoaderWrapper>
+                    <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
+                      <Loader message={'Loading more matches'} />
+                    </Animate>
+                  </LoaderWrapper>
+                )}
+                {!loadingMore && (
+                  <MatchHistoryComponent
+                    matches={matches}
+                    getMatchDetails={this.getMatchDetails}
+                    selectedMatchId={selectedMatchId}
+                  />
+                )}
               </HistoryWrapper>
             </Root>
           </Animate>
