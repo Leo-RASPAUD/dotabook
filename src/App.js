@@ -14,7 +14,7 @@ import queries from './queries/User';
 const RootWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100%;
   background: linear-gradient(270deg, #242866, #03070b);
   background-size: 400% 400%;
 `;
@@ -74,14 +74,12 @@ class App extends Component {
       <Router>
         <RootWrapper>
           <Toolbar />
-          <div style={{ flex: 1 }}>
-            <Switch>
-              {!isAuth && <Route path="/" exact component={PublicHome} />}
-              <PrivateRoute path="/home" exact component={Home} />
-              <PrivateRoute path="/user/search" exact component={Search} />
-              <Redirect to={isAuth ? '/home' : '/'} />
-            </Switch>
-          </div>
+          <Switch>
+            {!isAuth && <Route path="/" exact component={PublicHome} />}
+            <PrivateRoute path="/home" exact component={Home} />
+            <PrivateRoute path="/user/search" exact component={Search} />
+            <Redirect to={isAuth ? '/home' : '/'} />
+          </Switch>
         </RootWrapper>
       </Router>
     );

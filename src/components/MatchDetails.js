@@ -56,16 +56,21 @@ class MatchDetails extends React.PureComponent {
     const radiant = players.filter(player => player.isRadiant);
 
     return (
-      <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
-        <Root>
-          <Victory hasRadiantWon={data.radiant_win}>{data.radiant_win ? 'Radiant' : 'Dire'} victory</Victory>
-          <Teams>
-            <Team teamName="Dire" players={dire} updateNote={updateNote} />
-            <Team teamName="Radiant" players={radiant} updateNote={updateNote} />
-          </Teams>
-          <Separator />
-        </Root>
-      </Animate>
+      <Animate
+        play
+        startStyle={{ opacity: 0 }}
+        endStyle={{ opacity: 1 }}
+        render={() => (
+          <Root>
+            <Victory hasRadiantWon={data.radiant_win}>{data.radiant_win ? 'Radiant' : 'Dire'} victory</Victory>
+            <Teams>
+              <Team teamName="Dire" players={dire} updateNote={updateNote} />
+              <Team teamName="Radiant" players={radiant} updateNote={updateNote} />
+            </Teams>
+            <Separator />
+          </Root>
+        )}
+      />
     );
   }
 }

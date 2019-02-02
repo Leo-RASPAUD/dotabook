@@ -24,7 +24,6 @@ const Toolbar = styled.div`
   color: ${colors.white}
   height: 50px;
   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
-  margin-bottom: ${units.marginSmall};
   display: flex;
   align-items: center;
   padding-left: ${units.padding};
