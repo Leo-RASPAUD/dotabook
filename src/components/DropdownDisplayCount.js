@@ -5,6 +5,7 @@ import transitions from '../constants/transitions';
 import colors from '../constants/colors';
 
 const Select = styled.select`
+  height: 26px;
   font-weight: 500;
   font-family: 'Roboto', sans-serif;
   width: 75px;

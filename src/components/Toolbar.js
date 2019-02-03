@@ -69,12 +69,17 @@ const CustomLinks = styled(Link)`
   }
 `;
 
+const Logo = styled.div`
+  padding-left: ${units.padding};
+  flex: 1;
+`;
+
 export default props => {
   const isAuthenticated = auth.isAuthenticated();
   const user = auth.getUser();
   return (
     <Toolbar>
-      <div style={{ flex: 1 }}>Dotabook</div>
+      <Logo>Dotabook</Logo>
       {!isAuthenticated && <Login />}
       {isAuthenticated && (
         <Links>

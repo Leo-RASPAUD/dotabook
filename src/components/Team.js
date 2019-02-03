@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
+import { FaThumbsUp, FaThumbsDown, FaUser } from 'react-icons/fa';
 import { SimpleImg } from 'react-simple-img';
 import ReactTooltip from 'react-tooltip';
 import colors from '../constants/colors';
 import auth from '../utils/auth';
 import units from '../constants/units';
 import media from '../constants/media';
+import steam from '../utils/steam';
+import transitions from '../constants/transitions';
+import Flex from './Flex';
 
 const mediaQueries = `
     @media ${media.fromXsmallScreen} {
@@ -83,6 +86,15 @@ const Username = styled.div`
   margin-top: ${units.marginSmall};
 `;
 
+const ProfileIcon = styled.div`
+  color: ${colors.primary}
+  cursor: pointer;
+  transition: ${transitions.default};
+  &:hover {
+    color: ${colors.primary800};
+  }
+`;
+
 export default ({ teamName, players, updateNote, hasWon }) => {
   const isDire = teamName === 'Dire';
   return (
@@ -125,7 +137,28 @@ export default ({ teamName, players, updateNote, hasWon }) => {
               <Data>
                 {player.kills} / {player.deaths} / {player.assists}
               </Data>
-              <Data>{player.note}</Data>
+              <Flex center full withPadding spaceAround>
+                {player.username && (
+                  <>
+                    <ProfileIcon
+                      onClick={() => {
+                        window.open(`https://steamcommunity.com/profiles/${steam.convertSteamId64(player.account_id)}`);
+                      }}
+                    >
+                      <FaUser data-tip data-for={`profile-${player.account_id}`} />
+                    </ProfileIcon>
+                    <ReactTooltip id={`profile-${player.account_id}`} place="bottom" type="info" effect="solid">
+                      <span>Open steam profile</span>
+                    </ReactTooltip>
+                  </>
+                )}
+                <div data-tip data-for={`note-${player.account_id}`}>
+                  {player.note}
+                  <ReactTooltip id={`note-${player.account_id}`} place="bottom" type="info" effect="solid">
+                    <span>Behaviour note</span>
+                  </ReactTooltip>
+                </div>
+              </Flex>
             </PlayerData>
           );
         })}
