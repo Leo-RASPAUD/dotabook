@@ -3,10 +3,10 @@ const dbUtils = require('../utils/db.utils');
 module.exports.handler = async ({ username, avatar, id }) => {
   try {
     let player;
-    const resultsDb = await dbUtils.searchUser(username);
-    if (resultsDb.length > 0) {
+    const resultsDb = await dbUtils.getUser(id);
+    if (resultsDb) {
       player = {
-        ...resultsDb[0],
+        ...resultsDb,
         username,
         avatar,
       };

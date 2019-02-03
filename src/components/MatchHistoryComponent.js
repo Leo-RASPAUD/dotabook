@@ -58,13 +58,15 @@ const RowWrapper = styled.tr`
 
 const Buttons = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  margin: ${units.marginSmall};
 `;
 
 const Root = styled.div`
   display: flex;
   align-items: stretch;
   flex-direction: column;
+  margin-bottom: ${units.margin};
 `;
 
 const isMatchWon = (radiant_win, isRadiant) => (isRadiant && radiant_win) || (!isRadiant && !radiant_win);
@@ -79,7 +81,7 @@ class MatchHistoryComponent extends React.PureComponent {
     const assitsAverage = (matches.reduce((a, b) => a + b.assists, 0) / matchCount).toFixed(2);
     return (
       <Root>
-        <Flex margin={`${units.marginSmall} 0`}>
+        <Flex margin={`${units.marginSmall} 0`} center>
           <DropdownDisplayCount onChange={changeNumberDisplayed} limit={limit} />
           <div data-tip data-for="refresh">
             <Button
@@ -142,13 +144,29 @@ class MatchHistoryComponent extends React.PureComponent {
           </tbody>
         </Table>
         <Buttons>
-          <Button onClick={() => loadData({ isFirst: true })} disabled={offset === 0}>
+          <Button
+            transparent
+            noBorder
+            hoverText
+            bigText
+            onClick={() => loadData({ isFirst: true })}
+            disabled={offset === 0}
+          >
             First
           </Button>
-          <Button onClick={() => loadData({ isNext: false })} disabled={offset === 0}>
+          <Button
+            transparent
+            noBorder
+            hoverText
+            bigText
+            onClick={() => loadData({ isNext: false })}
+            disabled={offset === 0}
+          >
             {'<'}
           </Button>
-          <Button onClick={() => loadData({ isNext: true })}>{'>'}</Button>
+          <Button transparent noBorder hoverText bigText onClick={() => loadData({ isNext: true })}>
+            {'>'}
+          </Button>
         </Buttons>
       </Root>
     );

@@ -142,7 +142,6 @@ class MatchHistory extends React.PureComponent {
 
   render() {
     const { matches, loading, offset, limit, matchDetails, loadingDetails, selectedMatchId, loadingMore } = this.state;
-    console.log(matchDetails);
     // TODO: Improve loadings
     return (
       <Root>

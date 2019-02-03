@@ -19,7 +19,9 @@ const Button = styled.button`
   color: white;
   font-weight: 500;
   font-family: 'Roboto', sans-serif;
+  font-size: ${props => (props.bigText ? '20' : 'inherit')}
   cursor: pointer;
+  opacity: ${props => (props.disabled ? 0.5 : 1)}
 
   &:hover {
     background-color: ${props => (props.hoverText ? '' : props.variant === 'primary' ? colors.primary600 : 'red')};
@@ -36,8 +38,18 @@ export default ({
   noBorder = false,
   hoverText,
   margin = null,
+  bigText = false,
 }) => (
-  <Button variant={variant} onClick={onClick} disabled={disabled} transparent noBorder hoverText margin={margin}>
+  <Button
+    variant={variant}
+    onClick={onClick}
+    disabled={disabled}
+    transparent={transparent}
+    noBorder={noBorder}
+    hoverText={hoverText}
+    margin={margin}
+    bigText={bigText}
+  >
     {children}
   </Button>
 );

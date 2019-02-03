@@ -7,17 +7,16 @@ import units from '../constants/units';
 import colors from '../constants/colors';
 
 const Root = styled.div`
-  margin: ${units.margin};
   padding: ${units.padding};
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 350px;
+  height: 400px;
 `;
 
 const LoaderWrapper = styled.div`
-  margin: ${units.margin} 0;
-  height: 370px;
+  padding: ${units.padding};
+  height: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,6 +37,10 @@ const Teams = styled.div`
 const Separator = styled.hr`
   width: 50%;
   border: 1px solid #0f3c62;
+`;
+
+const Score = styled.div`
+  font-size: 24px;
 `;
 
 class MatchDetails extends React.PureComponent {
@@ -63,6 +66,9 @@ class MatchDetails extends React.PureComponent {
         render={() => (
           <Root>
             <Victory hasRadiantWon={data.radiant_win}>{data.radiant_win ? 'Radiant' : 'Dire'} victory</Victory>
+            <Score>
+              {data.dire_score} - {data.radiant_score}
+            </Score>
             <Teams>
               <Team teamName="Dire" players={dire} updateNote={updateNote} />
               <Team teamName="Radiant" players={radiant} updateNote={updateNote} />
