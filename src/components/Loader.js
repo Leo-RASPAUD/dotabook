@@ -18,7 +18,7 @@ const Root = styled.div`
 export default ({ withMargin, message }) => (
   <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
     <Root withMargin={withMargin}>
-      <div>{message}...</div>
+      {message && <div>{message}...</div>}
       <Loader />
     </Root>
   </Animate>

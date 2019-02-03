@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaThumbsUp, FaThumbsDown, FaUser } from 'react-icons/fa';
+import { FaThumbsUp, FaThumbsDown, FaUser, FaSearch, FaRegSmile, FaRegFrown } from 'react-icons/fa';
 import { SimpleImg } from 'react-simple-img';
 import ReactTooltip from 'react-tooltip';
 import colors from '../constants/colors';
@@ -10,6 +10,7 @@ import media from '../constants/media';
 import steam from '../utils/steam';
 import transitions from '../constants/transitions';
 import Flex from './Flex';
+import Loader from './Loader';
 
 const mediaQueries = `
     @media ${media.fromXsmallScreen} {
@@ -95,13 +96,32 @@ const ProfileIcon = styled.div`
   }
 `;
 
-export default ({ teamName, players, updateNote, hasWon }) => {
+const SearchIcon = styled(ProfileIcon)`
+  color: ${colors.white}
+  cursor: pointer;
+  transition: ${transitions.default};
+  opacity: ${props => (props.disabled ? 0.25 : 1)}
+  &:hover {
+    color: ${colors.primary800};
+  }
+`;
+
+const LoadDetails = styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export default ({ teamName, players, updateNote, hasWon, loadPlayerDetails }) => {
   const isDire = teamName === 'Dire';
   return (
     <Root>
       <Title isDire={isDire}>{teamName}</Title>
       <PlayersWrapper>
         {players.map(player => {
+          console.log(player.username, player.canLoad);
           const disabled = '' + player.account_id === auth.getUserId();
           const key = '' + player.player_slot;
           return (
@@ -159,6 +179,38 @@ export default ({ teamName, players, updateNote, hasWon }) => {
                   </ReactTooltip>
                 </div>
               </Flex>
+
+              <LoadDetails>
+                {player.username && !player.won && !player.loadingDetails && (
+                  <>
+                    <SearchIcon
+                      disabled={!player.canLoad}
+                      onClick={() => {
+                        if (!player.canLoad) return;
+                        loadPlayerDetails({ id: player.account_id });
+                      }}
+                    >
+                      <FaSearch data-tip data-for={`search-${player.account_id}`} />
+                    </SearchIcon>
+                    <ReactTooltip id={`search-${player.account_id}`} place="bottom" type="info" effect="solid">
+                      <span>Get win / loss of 50 last matches</span>
+                    </ReactTooltip>
+                  </>
+                )}
+                {player.loadingDetails && <Loader />}
+                {player.won && (
+                  <>
+                    <Flex center>
+                      <FaRegSmile size={'1.5rem'} color={colors.success} style={{ marginRight: units.marginSmall }} />
+                      <span>{player.won}</span>
+                    </Flex>
+                    <Flex center>
+                      <FaRegFrown size={'1.5rem'} color={colors.error} style={{ marginRight: units.marginSmall }} />
+                      <span>{player.lost}</span>
+                    </Flex>
+                  </>
+                )}
+              </LoadDetails>
             </PlayerData>
           );
         })}

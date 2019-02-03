@@ -12,6 +12,7 @@ import { FaSyncAlt } from 'react-icons/fa';
 import Button from './Button';
 import ReactTooltip from 'react-tooltip';
 import transitions from '../constants/transitions';
+import matchUtils from '../utils/matches';
 
 const Data = styled.td`
   min-width: 150px;
@@ -68,13 +69,10 @@ const Root = styled.div`
   flex-direction: column;
   margin-bottom: ${units.margin};
 `;
-
-const isMatchWon = (radiant_win, isRadiant) => (isRadiant && radiant_win) || (!isRadiant && !radiant_win);
-
 class MatchHistoryComponent extends React.PureComponent {
   render() {
     const { matches, getMatchDetails, selectedMatchId, loadData, changeNumberDisplayed, offset, limit } = this.props;
-    const wonCount = matches.reduce((a, b) => a + isMatchWon(b.radiant_win, b.player_slot < 128), 0);
+    const wonCount = matchUtils.getMatchesWonCount(matches);
     const matchCount = matches.length;
     const killsAverage = (matches.reduce((a, b) => a + b.kills, 0) / matchCount).toFixed(2);
     const deathsAverage = (matches.reduce((a, b) => a + b.deaths, 0) / matchCount).toFixed(2);
@@ -112,7 +110,7 @@ class MatchHistoryComponent extends React.PureComponent {
             {matches.map(match => {
               const date = fromUnixTime(match.start_time);
               const isRadiant = match.player_slot < 128;
-              const isWon = isMatchWon(match.radiant_win, isRadiant);
+              const isWon = matchUtils.isMatchWon(match.radiant_win, isRadiant);
               return (
                 <RowWrapper
                   key={match.match_id}

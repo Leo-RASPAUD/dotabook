@@ -9,6 +9,7 @@ import MatchHistoryComponent from './MatchHistoryComponent';
 import mutations from '../mutations/User';
 import { Animate } from 'react-simple-animate';
 import units from '../constants/units';
+import matchUtils from '../utils/matches';
 
 const Root = styled.div`
   flex: 1;
@@ -28,6 +29,44 @@ const LoaderWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
+const setLoadingDetails = ({ id, matchDetails, isLoading, won, lost }) => ({
+  ...matchDetails,
+  players: matchDetails.players.map(player => {
+    if (player.account_id === id) {
+      return {
+        ...player,
+        loadingDetails: isLoading,
+        won,
+        lost,
+      };
+    }
+    return {
+      ...player,
+      canLoad: !isLoading,
+    };
+  }),
+});
+
+const initMatchDetails = data => ({
+  ...data,
+  players: data.players.map(player => ({
+    ...player,
+    canLoad: true,
+    loadingDetails: false,
+  })),
+});
+
+const updatePlayerNote = ({ accountId, results }) => player => {
+  if (player.account_id === accountId) {
+    return {
+      ...player,
+      alreadyNoted: results.updatedNotedUsers.find(a => a.id === '' + player.account_id) ? true : false,
+      note: results.updatedNote,
+    };
+  }
+  return player;
+};
 
 class MatchHistory extends React.PureComponent {
   state = {
@@ -54,7 +93,7 @@ class MatchHistory extends React.PureComponent {
       } = await API.graphql(
         graphqlOperation(queries.getMatchDetails, { matchId: lastMatchId, currentUserId: auth.getUserId() }),
       );
-      this.setState({ loading: false, matchDetails: data, matches, selectedMatchId: lastMatchId });
+      this.setState({ loading: false, matchDetails: initMatchDetails(data), matches, selectedMatchId: lastMatchId });
     } else {
       this.setState({ loading: false, matches: [] });
     }
@@ -77,16 +116,36 @@ class MatchHistory extends React.PureComponent {
       } = await API.graphql(
         graphqlOperation(queries.getMatchDetails, { matchId: lastMatchId, currentUserId: auth.getUserId() }),
       );
+
       this.setState({
         offset: newOffset,
         matches,
         loadingMore: false,
-        matchDetails: data,
+        matchDetails: initMatchDetails(data),
         selectedMatchId: lastMatchId,
       });
     } else {
       this.setState({ offset: newOffset, matches, loadingMore: false });
     }
+  };
+
+  loadPlayerDetails = async ({ id }) => {
+    const { matchDetails } = this.state;
+    this.setState({ matchDetails: setLoadingDetails({ id, matchDetails, isLoading: true }) });
+
+    const {
+      data: { getMatches: matches },
+    } = await API.graphql(graphqlOperation(queries.getMatches, { profileId: id, offset: 0, limit: 50 }));
+    const wonCount = matchUtils.getMatchesWonCount(matches);
+    this.setState({
+      matchDetails: setLoadingDetails({
+        id,
+        matchDetails,
+        isLoading: false,
+        won: wonCount,
+        lost: matches.length - wonCount,
+      }),
+    });
   };
 
   changeNumberDisplayed = async event => {
@@ -103,7 +162,7 @@ class MatchHistory extends React.PureComponent {
       } = await API.graphql(
         graphqlOperation(queries.getMatchDetails, { matchId: lastMatchId, currentUserId: auth.getUserId() }),
       );
-      this.setState({ matches, loadingMore: false, matchDetails: data, offset: 0, limit });
+      this.setState({ matches, loadingMore: false, matchDetails: initMatchDetails(data), offset: 0, limit });
     } else {
       this.setState({ matches, loadingMore: false, offset: 0, limit });
     }
@@ -114,11 +173,12 @@ class MatchHistory extends React.PureComponent {
     const {
       data: { getMatchDetails: data },
     } = await API.graphql(graphqlOperation(queries.getMatchDetails, { matchId: id, currentUserId: auth.getUserId() }));
-    this.setState({ loadingDetails: false, matchDetails: data });
+    this.setState({ loadingDetails: false, matchDetails: initMatchDetails(data) });
   };
 
   updateNote = async ({ isNotePlus, accountId }) => {
-    const { players } = this.state.matchDetails;
+    const { matchDetails } = this.state;
+    const { players } = matchDetails;
     const {
       data: { updateNote: results },
     } = await API.graphql(
@@ -126,23 +186,14 @@ class MatchHistory extends React.PureComponent {
     );
     this.setState({
       matchDetails: {
-        players: players.map(player => {
-          if (player.account_id === accountId) {
-            return {
-              ...player,
-              alreadyNoted: results.updatedNotedUsers.find(a => a.id === '' + player.account_id) ? true : false,
-              note: results.updatedNote,
-            };
-          }
-          return player;
-        }),
+        ...matchDetails,
+        players: players.map(updatePlayerNote({ accountId, results })),
       },
     });
   };
 
   render() {
     const { matches, loading, offset, limit, matchDetails, loadingDetails, selectedMatchId, loadingMore } = this.state;
-    // TODO: Improve loadings
     return (
       <Root>
         {loading && (
@@ -162,7 +213,12 @@ class MatchHistory extends React.PureComponent {
             endStyle={{ opacity: 1 }}
             render={() => (
               <>
-                <MatchDetails data={matchDetails} loadingDetails={loadingDetails} updateNote={this.updateNote} />
+                <MatchDetails
+                  data={matchDetails}
+                  loadingDetails={loadingDetails}
+                  updateNote={this.updateNote}
+                  loadPlayerDetails={this.loadPlayerDetails}
+                />
                 <HistoryWrapper>
                   {loadingMore && (
                     <LoaderWrapper>

@@ -11,12 +11,12 @@ const Root = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 400px;
+  height: 450px;
 `;
 
 const LoaderWrapper = styled.div`
   padding: ${units.padding};
-  height: 400px;
+  height: 450px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,7 +45,7 @@ const Score = styled.div`
 
 class MatchDetails extends React.PureComponent {
   render() {
-    const { loadingDetails, data, updateNote } = this.props;
+    const { loadingDetails, data, updateNote, loadPlayerDetails } = this.props;
     if (!data || loadingDetails || data.players.length === 0) {
       return (
         <LoaderWrapper>
@@ -70,8 +70,13 @@ class MatchDetails extends React.PureComponent {
               {data.dire_score} - {data.radiant_score}
             </Score>
             <Teams>
-              <Team teamName="Dire" players={dire} updateNote={updateNote} />
-              <Team teamName="Radiant" players={radiant} updateNote={updateNote} />
+              <Team teamName="Dire" players={dire} updateNote={updateNote} loadPlayerDetails={loadPlayerDetails} />
+              <Team
+                teamName="Radiant"
+                players={radiant}
+                updateNote={updateNote}
+                loadPlayerDetails={loadPlayerDetails}
+              />
             </Teams>
             <Separator />
           </Root>
