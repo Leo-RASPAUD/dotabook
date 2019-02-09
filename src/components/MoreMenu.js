@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import units from '../constants/units';
-import { FaSignOutAlt, FaHome, FaSearch } from 'react-icons/fa';
+import { FaSignOutAlt, FaHome, FaSearch, FaInfo } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import auth from '../utils/auth';
 import transitions from '../constants/transitions';
 import colors from '../constants/colors';
 import media from '../constants/media';
+import steam from '../utils/steam';
 
 const mediaQueries = `
 @media ${media.fromXsmallScreen} {
@@ -39,7 +40,7 @@ const CustomLink = styled(Link)`
   color: inherit;
 `;
 
-export default class LogoutModal extends React.PureComponent {
+export default class MoreMenu extends React.PureComponent {
   logout = () => {
     auth.removeUser();
     window.location.replace('/login');
@@ -47,6 +48,7 @@ export default class LogoutModal extends React.PureComponent {
 
   render() {
     const { toggleModal } = this.props;
+    const userId = auth.getUserId();
     return (
       <div>
         <MenuItem onClick={() => toggleModal(false)}>
@@ -60,6 +62,21 @@ export default class LogoutModal extends React.PureComponent {
             <FaSearch />
           </WithMargin>
           <CustomLink to="/user/search">Search</CustomLink>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            window.open(
+              `https://steamcommunity.com/profiles/${steam.convertSteamId64(
+                userId,
+              )}/gcpd/570?category=Account&tab=MatchPlayerReportIncoming`,
+            );
+          }}
+          alwaysDisplay
+        >
+          <WithMargin>
+            <FaInfo />
+          </WithMargin>
+          <div>Check reports</div>
         </MenuItem>
         <MenuItem onClick={this.logout} alwaysDisplay>
           <WithMargin>

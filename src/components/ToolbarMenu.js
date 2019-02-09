@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
-import LogoutModal from './LogoutModal';
+import MoreMenu from './MoreMenu';
 import { FaEllipsisV } from 'react-icons/fa';
 
 const Icon = styled(FaEllipsisV)`
@@ -40,7 +40,7 @@ export default () => {
     <>
       <div ref={theNode => (node = theNode)}>
         <Modal isOpen={isModalOpened}>
-          <LogoutModal toggleModal={toggleModal} />
+          <MoreMenu toggleModal={toggleModal} />
         </Modal>
       </div>
       <Icon onClick={() => toggleModal(!isModalOpened)} />
