@@ -121,7 +121,6 @@ export default ({ teamName, players, updateNote, hasWon, loadPlayerDetails }) =>
       <Title isDire={isDire}>{teamName}</Title>
       <PlayersWrapper>
         {players.map(player => {
-          console.log(player.username, player.canLoad);
           const disabled = '' + player.account_id === auth.getUserId();
           const key = '' + player.player_slot;
           return (
