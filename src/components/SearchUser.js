@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
+import { useAnimate } from 'react-simple-animate';
 import SearchInput from './SearchInput';
 import styled from 'styled-components';
 import media from '../constants/media';
@@ -8,7 +9,7 @@ import units from '../constants/units';
 import FlexRowCenterDiv from './FlexRowCenterDiv';
 import Loader from './Loader';
 import SearchUserResults from './SearchUserResults';
-import { Animate } from 'react-simple-animate';
+import transitions from '../constants/transitions';
 
 const Root = styled.div`
   @media ${media.fromXsmallScreen} {
@@ -26,44 +27,33 @@ const Root = styled.div`
   align-items: center;
 `;
 
-export default class SearchUser extends React.PureComponent {
-  state = {
-    users: [],
-    loading: false,
-  };
-  searchUser = async username => {
-    this.setState({ loading: true });
+export default () => {
+  const [isLoading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [{ style }] = useAnimate(transitions.defaultAnimation);
+
+  const searchUser = async username => {
+    setLoading(true);
     const {
       data: { searchUser: users },
     } = await API.graphql(graphqlOperation(queries.searchUser, { username }));
-    this.setState({ users, loading: false });
+    setUsers(users);
+    setLoading(false);
   };
 
-  clear = () => {
-    this.setState({ users: [] });
-  };
-
-  render() {
-    const { users, loading } = this.state;
-    return (
-      <FlexRowCenterDiv>
-        <Root>
-          <SearchInput
-            id="searchUser"
-            searchFunction={this.searchUser}
-            label="Search user"
-            clear={this.clear}
-            displayClear={users.length > 0}
-          />
-          {loading && <Loader withMargin message={'Searching user'} />}
-
-          {!loading && (
-            <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1, width: '100%' }}>
-              <SearchUserResults users={users} />
-            </Animate>
-          )}
-        </Root>
-      </FlexRowCenterDiv>
-    );
-  }
-}
+  return (
+    <FlexRowCenterDiv>
+      <Root>
+        <SearchInput
+          id="searchUser"
+          searchFunction={searchUser}
+          label="Search user"
+          clear={() => setUsers([])}
+          displayClear={users.length > 0}
+        />
+        {isLoading && <Loader withMargin message={'Searching user'} />}
+        {!isLoading && <SearchUserResults users={users} style={style} />}
+      </Root>
+    </FlexRowCenterDiv>
+  );
+};
