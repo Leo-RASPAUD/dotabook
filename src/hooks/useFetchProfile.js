@@ -2,6 +2,7 @@ import { useState, useLayoutEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import mutations from '../mutations/User';
 import authUtils from '../utils/auth';
+import slack from '../utils/slack';
 import queries from '../queries/User';
 
 const { isFromRedirect, getProfileId, setUser } = authUtils;
@@ -29,6 +30,7 @@ const useFetchProfile = () => {
 
       setUser(createdUser);
       setLoading(false);
+      slack.loginUser(createdUser);
     }
   };
 
