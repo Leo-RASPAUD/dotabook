@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
 import LogoutModal from './LogoutModal';
@@ -13,42 +13,37 @@ const Icon = styled(FaEllipsisV)`
   justify-content: center;
 `;
 
-export default class Login extends React.PureComponent {
-  node = null;
+let node = null;
 
-  state = {
-    isModalOpened: false,
-  };
+export default () => {
+  const [isModalOpened, setModalOpened] = useState(false);
 
-  componentDidMount = () => {
-    document.addEventListener('mousedown', this.handleClick, false);
-  };
-  componentWillUnMount = () => {
-    document.removeEventListener('mousedown', this.handleClick, false);
-  };
-
-  handleClick = event => {
-    if (this.node.contains(event.target)) {
+  const handleClick = event => {
+    if (node.contains(event.target)) {
       return;
     }
-    this.toggleModal(false);
+    setModalOpened(false);
   };
 
-  toggleModal = isOpen => {
-    this.setState({ isModalOpened: isOpen });
+  const toggleModal = isOpen => {
+    setModalOpened(isOpen);
   };
 
-  render() {
-    const { isModalOpened } = this.state;
-    return (
-      <>
-        <div ref={node => (this.node = node)}>
-          <Modal isOpen={isModalOpened}>
-            <LogoutModal toggleModal={this.toggleModal} />
-          </Modal>
-        </div>
-        <Icon onClick={() => this.toggleModal(!isModalOpened)} />
-      </>
-    );
-  }
-}
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick, false);
+    return () => {
+      document.removeEventListener('mousedown', handleClick, false);
+    };
+  });
+
+  return (
+    <>
+      <div ref={theNode => (node = theNode)}>
+        <Modal isOpen={isModalOpened}>
+          <LogoutModal toggleModal={toggleModal} />
+        </Modal>
+      </div>
+      <Icon onClick={() => toggleModal(!isModalOpened)} />
+    </>
+  );
+};
