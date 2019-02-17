@@ -4,10 +4,11 @@ const constants = require('../constants/constants');
 
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
-const updateNotedUsers = ({ accountId, isNotePlus }) => user => {
+const updateNotedUsers = ({ accountId, isNotePlus, username }) => user => {
   if (user.id === accountId) {
     return {
       ...user,
+      username,
       updatedOn: Date.now(),
       note: isNotePlus ? 1 : -1,
     };
@@ -15,21 +16,21 @@ const updateNotedUsers = ({ accountId, isNotePlus }) => user => {
   return user;
 };
 
-module.exports.handler = async ({ accountId, currentUserId, isNotePlus }) => {
+module.exports.handler = async ({ accountId, currentUserId, isNotePlus, username }) => {
   const dbCurrentUser = await dbUtils.getUser(currentUserId);
   const dbUserToUpdate = await dbUtils.getUser(accountId);
 
   const alreadyUpdated = dbCurrentUser.notedUsers && dbCurrentUser.notedUsers.find(item => item.id === '' + accountId);
 
   let updatedNotedUsers = [];
-  const newNotedUser = { updatedOn: Date.now(), note: isNotePlus ? 1 : -1, id: accountId };
+  const newNotedUser = { updatedOn: Date.now(), note: isNotePlus ? 1 : -1, id: accountId, username };
   const needsToBeUpdated =
     alreadyUpdated && ((alreadyUpdated.note === 1 && !isNotePlus) || (alreadyUpdated.note === -1 && isNotePlus));
 
   if (!dbCurrentUser.notedUsers) {
     updatedNotedUsers = [newNotedUser];
   } else if (needsToBeUpdated) {
-    updatedNotedUsers = dbCurrentUser.notedUsers.map(updateNotedUsers({ accountId, isNotePlus }));
+    updatedNotedUsers = dbCurrentUser.notedUsers.map(updateNotedUsers({ accountId, isNotePlus, username }));
   } else if (!alreadyUpdated) {
     updatedNotedUsers = dbCurrentUser.notedUsers.concat(newNotedUser);
   } else {

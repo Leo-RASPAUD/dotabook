@@ -9,10 +9,11 @@ const Flex = styled.div`
   width: ${props => (props.full ? '100%' : 'inherit')};
   padding: ${props => (props.withPadding ? units.padding : 0)};
   justify-content: ${props => (props.spaceAround ? 'space-around' : 'inherit')};
+  flex-direction: ${props => (props.row ? 'row' : 'column')};
 `;
 
-export default ({ children, margin, center, full, withPadding, spaceAround }) => (
-  <Flex margin={margin} center={center} full={full} withPadding={withPadding} spaceAround={spaceAround}>
+export default ({ children, margin, center, full, withPadding, spaceAround, row }) => (
+  <Flex margin={margin} center={center} full={full} withPadding={withPadding} spaceAround={spaceAround} row={row}>
     {children}
   </Flex>
 );

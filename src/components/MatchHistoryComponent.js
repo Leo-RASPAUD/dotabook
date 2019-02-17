@@ -13,6 +13,16 @@ import Button from './Button';
 import ReactTooltip from 'react-tooltip';
 import transitions from '../constants/transitions';
 import matchUtils from '../utils/matches';
+import media from '../constants/media';
+
+const mediaQueries = `
+@media ${media.fromXsmallScreen} {
+  display: none;
+}
+
+@media ${media.fromMediumScreen} {
+  display: flex;
+}`;
 
 const Data = styled.td`
   min-width: 150px;
@@ -64,7 +74,7 @@ const Buttons = styled.div`
 `;
 
 const Root = styled.div`
-  display: flex;
+  ${mediaQueries}
   align-items: stretch;
   flex-direction: column;
   margin-bottom: ${units.margin};

@@ -7,8 +7,8 @@ const createUser = `mutation createUser($avatar: String!, $username: String!, $i
     }
   }`;
 
-const updateNote = `mutation updateNote($accountId: String!, $currentUserId: String!, $isNotePlus: Boolean!) {
-    updateNote(accountId: $accountId, currentUserId: $currentUserId, isNotePlus: $isNotePlus ) {
+const updateNote = `mutation updateNote($accountId: String!, $currentUserId: String!, $isNotePlus: Boolean!, $username: String!) {
+    updateNote(accountId: $accountId, currentUserId: $currentUserId, isNotePlus: $isNotePlus, username: $username ) {
         ${UpdateNoteResult}
     }
 }`;

@@ -131,12 +131,16 @@ export default ({ teamName, players, updateNote, hasWon, loadPlayerDetails }) =>
                     <FaThumbsUp
                       style={(player.alreadyNoted && player.note === -1) || disabled ? inactive : ''}
                       color={colors.success}
-                      onClick={() => updateNote({ isNotePlus: true, accountId: player.account_id })}
+                      onClick={() =>
+                        updateNote({ isNotePlus: true, accountId: player.account_id, username: player.username })
+                      }
                     />
                     <FaThumbsDown
                       style={(player.alreadyNoted && player.note === 1) || disabled ? inactive : ''}
                       color={colors.error}
-                      onClick={() => updateNote({ isNotePlus: false, accountId: player.account_id })}
+                      onClick={() =>
+                        updateNote({ isNotePlus: false, accountId: player.account_id, username: player.username })
+                      }
                     />
                   </>
                 )}

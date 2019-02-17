@@ -5,10 +5,20 @@ import Loader from './Loader';
 import Team from './Team';
 import units from '../constants/units';
 import colors from '../constants/colors';
+import media from '../constants/media';
+
+const mediaQueries = `
+@media ${media.fromXsmallScreen} {
+  display: none;
+}
+
+@media ${media.fromMediumScreen} {
+  display: flex;
+}`;
 
 const Root = styled.div`
+  ${mediaQueries}
   padding: ${units.padding};
-  display: flex;
   flex-direction: column;
   align-items: center;
   height: 450px;
@@ -45,6 +55,7 @@ const Score = styled.div`
 
 class MatchDetails extends React.PureComponent {
   render() {
+    if (media.isMobileScreen) return null;
     const { loadingDetails, data, updateNote, loadPlayerDetails } = this.props;
     if (!data || loadingDetails || data.players.length === 0) {
       return (

@@ -6,6 +6,7 @@ import auth from '../utils/auth';
 import MatchDetails from './MatchDetails';
 import Loader from './Loader';
 import MatchHistoryComponent from './MatchHistoryComponent';
+import MobileMatchList from './MobileMatchList';
 import mutations from '../mutations/User';
 import { Animate } from 'react-simple-animate';
 import units from '../constants/units';
@@ -17,9 +18,9 @@ const Root = styled.div`
 `;
 
 const HistoryWrapper = styled.div`
-  display: flex;
   flex-direction: column;
   align-items: center;
+  display: flex;
 `;
 
 const LoaderWrapper = styled.div`
@@ -176,13 +177,13 @@ class MatchHistory extends React.PureComponent {
     this.setState({ loadingDetails: false, matchDetails: initMatchDetails(data) });
   };
 
-  updateNote = async ({ isNotePlus, accountId }) => {
+  updateNote = async ({ isNotePlus, accountId, username }) => {
     const { matchDetails } = this.state;
     const { players } = matchDetails;
     const {
       data: { updateNote: results },
     } = await API.graphql(
-      graphqlOperation(mutations.updateNote, { isNotePlus, accountId, currentUserId: auth.getUserId() }),
+      graphqlOperation(mutations.updateNote, { isNotePlus, accountId, currentUserId: auth.getUserId(), username }),
     );
     this.setState({
       matchDetails: {
@@ -231,15 +232,26 @@ class MatchHistory extends React.PureComponent {
                     </LoaderWrapper>
                   )}
                   {!loadingMore && (
-                    <MatchHistoryComponent
-                      matches={matches}
-                      getMatchDetails={this.getMatchDetails}
-                      selectedMatchId={selectedMatchId}
-                      loadData={this.loadData}
-                      changeNumberDisplayed={this.changeNumberDisplayed}
-                      offset={offset}
-                      limit={limit}
-                    />
+                    <>
+                      <MatchHistoryComponent
+                        matches={matches}
+                        getMatchDetails={this.getMatchDetails}
+                        selectedMatchId={selectedMatchId}
+                        loadData={this.loadData}
+                        changeNumberDisplayed={this.changeNumberDisplayed}
+                        offset={offset}
+                        limit={limit}
+                      />
+                      <MobileMatchList
+                        matches={matches}
+                        getMatchDetails={this.getMatchDetails}
+                        selectedMatchId={selectedMatchId}
+                        loadData={this.loadData}
+                        changeNumberDisplayed={this.changeNumberDisplayed}
+                        offset={offset}
+                        limit={limit}
+                      />
+                    </>
                   )}
                 </HistoryWrapper>
               </>
