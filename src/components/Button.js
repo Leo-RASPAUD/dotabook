@@ -19,7 +19,7 @@ const Button = styled.button`
   color: white;
   font-weight: 500;
   font-family: 'Roboto', sans-serif;
-  font-size: ${props => (props.bigText ? '20' : 'inherit')}
+  font-size: ${props => (props.bigText ? '20px' : '12px')}
   cursor: pointer;
   opacity: ${props => (props.disabled ? 0.5 : 1)}
 
