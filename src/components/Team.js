@@ -9,8 +9,8 @@ import units from '../constants/units';
 import media from '../constants/media';
 import steam from '../utils/steam';
 import transitions from '../constants/transitions';
-import Flex from './Flex';
-import Loader from './Loader';
+import Flex from './commons/Flex';
+import Loader from './commons/Loader';
 
 const mediaQueries = `
     @media ${media.fromXsmallScreen} {

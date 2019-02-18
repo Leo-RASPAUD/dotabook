@@ -4,7 +4,7 @@ import units from '../constants/units';
 import SteamSvg from './SteamSvg';
 import { API, graphqlOperation } from 'aws-amplify';
 import queries from '../queries/User';
-import Button from './Button';
+import Button from './commons/Button';
 
 const Content = styled.div`
   padding-left: ${units.paddingSmall};

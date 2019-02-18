@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import units from '../constants/units';
+import units from '../../constants/units';
 
 const Flex = styled.div`
   display: flex;

@@ -6,7 +6,7 @@ import PublicHome from './PublicHome/PublicHome';
 import Home from './Home/Home';
 import Toolbar from './components/Toolbar';
 import Search from './Search/Search';
-import Loader from './components/Loader';
+import Loader from './components/commons/Loader';
 import useFetchProfile from './hooks/useFetchProfile';
 
 const RootWrapper = styled.div`

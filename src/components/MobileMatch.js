@@ -6,7 +6,7 @@ import format from 'date-fns/format';
 import matchUtils from '../utils/matches';
 import units from '../constants/units';
 import colors from '../constants/colors';
-import Flex from './Flex';
+import Flex from './commons/Flex';
 
 const Match = styled.div`
   display: flex;

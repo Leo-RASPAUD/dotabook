@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import queries from '../queries/Matches';
 import auth from '../utils/auth';
 import MatchDetails from './MatchDetails';
-import Loader from './Loader';
+import Loader from './commons/Loader';
 import MatchHistoryComponent from './MatchHistoryComponent';
 import MobileMatchList from './MobileMatchList';
 import mutations from '../mutations/User';

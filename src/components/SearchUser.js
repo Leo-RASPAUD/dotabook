@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import media from '../constants/media';
 import queries from '../queries/User';
 import units from '../constants/units';
-import Flex from './Flex';
-import Loader from './Loader';
+import Flex from './commons/Flex';
+import Loader from './commons/Loader';
 import SearchUserResults from './SearchUserResults';
 import transitions from '../constants/transitions';
 

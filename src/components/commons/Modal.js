@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import transitions from '../constants/transitions';
-import colors from '../constants/colors';
+import transitions from '../../constants/transitions';
+import colors from '../../constants/colors';
 
 const Modal = styled.div`
   border-radius: 5px;

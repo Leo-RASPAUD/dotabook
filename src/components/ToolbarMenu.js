@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Modal from './Modal';
+import Modal from './commons/Modal';
 import MoreMenu from './MoreMenu';
 import { FaEllipsisV } from 'react-icons/fa';
 

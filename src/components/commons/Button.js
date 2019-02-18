@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import colors from '../constants/colors';
-import units from '../constants/units';
-import transitions from '../constants/transitions';
+import colors from '../../constants/colors';
+import units from '../../constants/units';
+import transitions from '../../constants/transitions';
 
 const Button = styled.button`
   display: flex;

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Animate } from 'react-simple-animate';
-import Loader from './Loader';
+import Loader from './commons/Loader';
 import Team from './Team';
 import units from '../constants/units';
 import colors from '../constants/colors';
