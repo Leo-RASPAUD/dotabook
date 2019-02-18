@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import media from '../constants/media';
 import queries from '../queries/User';
 import units from '../constants/units';
-import FlexRowCenterDiv from './FlexRowCenterDiv';
+import Flex from './Flex';
 import Loader from './Loader';
 import SearchUserResults from './SearchUserResults';
 import transitions from '../constants/transitions';
@@ -42,7 +42,7 @@ export default () => {
   };
 
   return (
-    <FlexRowCenterDiv>
+    <Flex justify="center">
       <Root>
         <SearchInput
           id="searchUser"
@@ -54,6 +54,6 @@ export default () => {
         {isLoading && <Loader withMargin message={'Searching user'} />}
         {!isLoading && <SearchUserResults users={users} style={style} />}
       </Root>
-    </FlexRowCenterDiv>
+    </Flex>
   );
 };

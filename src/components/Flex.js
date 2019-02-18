@@ -5,15 +5,23 @@ import units from '../constants/units';
 const Flex = styled.div`
   display: flex;
   margin: ${props => props.margin || 0};
-  align-items: ${props => (props.center ? 'center' : 'inherit')};
+  align-items: ${props => (props.alignItems ? props.alignItems : 'inherit')};
   width: ${props => (props.full ? '100%' : 'inherit')};
   padding: ${props => (props.withPadding ? units.padding : 0)};
-  justify-content: ${props => (props.spaceAround ? 'space-around' : 'inherit')};
-  flex-direction: ${props => (props.row ? 'row' : 'column')};
+  justify-content: ${props => (props.justify ? props.justify : 'inherit')};
+  flex-direction: ${props => (props.column ? 'column' : 'row')};
 `;
 
-export default ({ children, margin, center, full, withPadding, spaceAround, row }) => (
-  <Flex margin={margin} center={center} full={full} withPadding={withPadding} spaceAround={spaceAround} row={row}>
+export default ({ children, margin, alignItems, full, withPadding, spaceAround, column = false, justify }) => (
+  <Flex
+    margin={margin}
+    alignItems={alignItems}
+    full={full}
+    withPadding={withPadding}
+    spaceAround={spaceAround}
+    column={column}
+    justify={justify}
+  >
     {children}
   </Flex>
 );

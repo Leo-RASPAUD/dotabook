@@ -68,8 +68,8 @@ export default props => {
   return users.map(user => (
     <Root key={user.id}>
       <SimpleImg
-        width="50"
-        height="50"
+        width="50px"
+        height="50px"
         src={user.avatar}
         placeholder={'white'}
         style={{ borderRadius: `${units.borderRadius} 0 0 ${units.borderRadius}` }}

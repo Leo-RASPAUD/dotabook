@@ -89,7 +89,7 @@ class MatchHistoryComponent extends React.PureComponent {
     const assitsAverage = (matches.reduce((a, b) => a + b.assists, 0) / matchCount).toFixed(2);
     return (
       <Root>
-        <Flex margin={`${units.marginSmall} 0`} center>
+        <Flex margin={`${units.marginSmall} 0`} justify="center">
           <DropdownDisplayCount onChange={changeNumberDisplayed} limit={limit} />
           <div data-tip data-for="refresh">
             <Button

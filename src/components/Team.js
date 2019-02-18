@@ -160,7 +160,7 @@ export default ({ teamName, players, updateNote, hasWon, loadPlayerDetails }) =>
               <Data>
                 {player.kills} / {player.deaths} / {player.assists}
               </Data>
-              <Flex center full withPadding spaceAround>
+              <Flex center full withPadding justify="space-around">
                 {player.username && (
                   <>
                     <ProfileIcon
@@ -203,11 +203,11 @@ export default ({ teamName, players, updateNote, hasWon, loadPlayerDetails }) =>
                 {player.loadingDetails && <Loader />}
                 {player.won && (
                   <>
-                    <Flex center>
+                    <Flex alignItems="center">
                       <FaRegSmile size={'1.5rem'} color={colors.success} style={{ marginRight: units.marginSmall }} />
                       <span>{player.won}</span>
                     </Flex>
-                    <Flex center>
+                    <Flex alignItems="center">
                       <FaRegFrown size={'1.5rem'} color={colors.error} style={{ marginRight: units.marginSmall }} />
                       <span>{player.lost}</span>
                     </Flex>
