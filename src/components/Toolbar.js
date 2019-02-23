@@ -87,12 +87,8 @@ const ToolbarComponent = props => {
   return (
     <Toolbar>
       <Logo>Dotabook</Logo>
-      {!isAuthenticated && (
-        <>
-          <CustomLinks to="/search/user">Search</CustomLinks>
-          <Login />
-        </>
-      )}
+      <CustomLinks to="/search/user">Search</CustomLinks>
+      {!isAuthenticated && <Login />}
       {isAuthenticated && (
         <Links>
           <CustomLinks to="/home">Home</CustomLinks>
