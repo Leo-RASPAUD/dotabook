@@ -126,7 +126,6 @@ const Team = ({ teamName, players, updateNote, hasWon, loadPlayerDetails, histor
       <Title isDire={isDire}>{teamName}</Title>
       <PlayersWrapper>
         {players.map(player => {
-          console.log(player);
           const disabled = '' + player.account_id === auth.getUserId();
           const key = '' + player.player_slot;
           return (
