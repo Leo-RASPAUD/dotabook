@@ -7,7 +7,7 @@ import colors from '../constants/colors';
 import auth from '../utils/auth';
 import units from '../constants/units';
 import media from '../constants/media';
-import steam from '../utils/steam';
+import { withRouter } from 'react-router';
 import transitions from '../constants/transitions';
 import Flex from './commons/Flex';
 import Loader from './commons/Loader';
@@ -119,13 +119,14 @@ const LoadDetails = styled.div`
   }
 `;
 
-export default ({ teamName, players, updateNote, hasWon, loadPlayerDetails }) => {
+const Team = ({ teamName, players, updateNote, hasWon, loadPlayerDetails, history }) => {
   const isDire = teamName === 'Dire';
   return (
     <Root>
       <Title isDire={isDire}>{teamName}</Title>
       <PlayersWrapper>
         {players.map(player => {
+          console.log(player);
           const disabled = '' + player.account_id === auth.getUserId();
           const key = '' + player.player_slot;
           return (
@@ -170,13 +171,22 @@ export default ({ teamName, players, updateNote, hasWon, loadPlayerDetails }) =>
                   <>
                     <ProfileIcon
                       onClick={() => {
-                        window.open(`https://steamcommunity.com/profiles/${steam.convertSteamId64(player.account_id)}`);
+                        history.push({
+                          pathname: `/user/${player.account_id}`,
+                          state: {
+                            user: {
+                              username: player.username,
+                              id: player.account_id,
+                              avatar: '',
+                            },
+                          },
+                        });
                       }}
                     >
                       <FaUser data-tip data-for={`profile-${player.account_id}`} />
                     </ProfileIcon>
                     <ReactTooltip id={`profile-${player.account_id}`} place="bottom" type="info" effect="solid">
-                      <span>Open steam profile</span>
+                      <span>Open profile</span>
                     </ReactTooltip>
                   </>
                 )}
@@ -226,3 +236,5 @@ export default ({ teamName, players, updateNote, hasWon, loadPlayerDetails }) =>
     </Root>
   );
 };
+
+export default withRouter(Team);
