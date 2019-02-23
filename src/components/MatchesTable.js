@@ -7,6 +7,8 @@ import time from '../utils/time';
 import colors from '../constants/colors';
 import transitions from '../constants/transitions';
 import matchUtils from '../utils/matches';
+import Flex from './commons/Flex';
+import Title from './commons/Title';
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -17,9 +19,9 @@ const Table = styled.table`
   }
   & tr {
     transition: ${transitions.default};
-    cursor: pointer;
+    cursor: ${props => (props.readOnly ? '' : 'pointer')};
     :hover {
-      background-color: #0d47a15e;
+      background-color: ${props => (props.readOnly ? '' : '#0d47a15e')};
     }
   }
   & tr td,
@@ -60,54 +62,57 @@ const MatchesTable = ({ matches, readOnly, getMatchDetails, selectedMatchId }) =
   const results = readOnly ? 'Result' : `Result ( W:${wonCount} / L:${matches.length - wonCount} )`;
   const kda = readOnly ? 'K / D / A' : `K (${killsAverage}) / D (${deathsAverage}) / A (${assitsAverage})`;
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Hero</th>
-          <th>Date</th>
-          <th>{results}</th>
-          <th>Duration</th>
-          <th>{kda}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {matches.map(match => {
-          const date = fromUnixTime(match.start_time);
-          const isRadiant = match.player_slot < 128;
-          const isWon = matchUtils.isMatchWon(match.radiant_win, isRadiant);
-          return (
-            <RowWrapper
-              key={match.match_id}
-              onClick={() => {
-                if (readOnly) return;
-                getMatchDetails({ id: match.match_id });
-              }}
-              isSelected={!readOnly && selectedMatchId === match.match_id}
-            >
-              <td>
-                <SimpleImg
-                  height={50}
-                  width={100}
-                  src={`https://api.opendota.com${match.hero.img}`}
-                  placeholder={'#050911'}
-                />
-              </td>
-              <Data>
-                <MatchId>{match.match_id}</MatchId>
-                <TextAlignLeft>{format(date, 'dd/MM/yyyy kk:mm')}</TextAlignLeft>
-              </Data>
-              <Data status isWon={isWon}>
-                {isWon ? 'Won match' : 'Lost match'}
-              </Data>
-              <Data>{time.secondsToHms(match.duration)}</Data>
-              <Data>
-                {match.kills} / {match.deaths} / {match.assists}
-              </Data>
-            </RowWrapper>
-          );
-        })}
-      </tbody>
-    </Table>
+    <Flex withPadding column>
+      <Title>Matches</Title>
+      <Table readOnly>
+        <thead>
+          <tr>
+            <th>Hero</th>
+            <th>Date</th>
+            <th>{results}</th>
+            <th>Duration</th>
+            <th>{kda}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {matches.map(match => {
+            const date = fromUnixTime(match.start_time);
+            const isRadiant = match.player_slot < 128;
+            const isWon = matchUtils.isMatchWon(match.radiant_win, isRadiant);
+            return (
+              <RowWrapper
+                key={match.match_id}
+                onClick={() => {
+                  if (readOnly) return;
+                  getMatchDetails({ id: match.match_id });
+                }}
+                isSelected={!readOnly && selectedMatchId === match.match_id}
+              >
+                <td>
+                  <SimpleImg
+                    height={50}
+                    width={100}
+                    src={`https://api.opendota.com${match.hero.img}`}
+                    placeholder={'#050911'}
+                  />
+                </td>
+                <Data>
+                  <MatchId>{match.match_id}</MatchId>
+                  <TextAlignLeft>{format(date, 'dd/MM/yyyy kk:mm')}</TextAlignLeft>
+                </Data>
+                <Data status isWon={isWon}>
+                  {isWon ? 'Won match' : 'Lost match'}
+                </Data>
+                <Data>{time.secondsToHms(match.duration)}</Data>
+                <Data>
+                  {match.kills} / {match.deaths} / {match.assists}
+                </Data>
+              </RowWrapper>
+            );
+          })}
+        </tbody>
+      </Table>
+    </Flex>
   );
 };
 

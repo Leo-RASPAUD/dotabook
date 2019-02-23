@@ -34,3 +34,5 @@ functions:
     handler: createUser/createUser.handler
   getUserStats:
     handler: getUserStats/getUserStats.handler
+  getPeers:
+    handler: getPeers/getPeers.handler

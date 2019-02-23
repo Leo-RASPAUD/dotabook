@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 import transitions from '../constants/transitions';
 import media from '../constants/media';
+import { withRouter } from 'react-router';
 
 const mediaQueries = `
 @media ${media.fromXsmallScreen} {
@@ -39,6 +40,11 @@ const Profile = styled.div`
   display: flex;
   align-items: center;
   margin: 0 0 0 ${units.margin};
+  cursor: pointer;
+  transition: ${transitions.default};
+  &:hover {
+    color: ${colors.primary};
+  }
 `;
 
 const WithPadding = styled.div`
@@ -74,7 +80,8 @@ const Logo = styled.div`
   flex: 1;
 `;
 
-export default props => {
+const ToolbarComponent = props => {
+  const { history } = props;
   const isAuthenticated = auth.isAuthenticated();
   const user = auth.getUser();
   return (
@@ -91,7 +98,16 @@ export default props => {
               <span>User behaviour note</span>
             </ReactTooltip>
           </Note>
-          <Profile>
+          <Profile
+            onClick={() => {
+              history.push({
+                pathname: `/user/${user.id}`,
+                state: {
+                  user,
+                },
+              });
+            }}
+          >
             <FaUser size={'1.5rem'} />
             <WithPadding>{user.username}</WithPadding>
           </Profile>
@@ -101,3 +117,5 @@ export default props => {
     </Toolbar>
   );
 };
+
+export default withRouter(ToolbarComponent);
