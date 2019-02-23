@@ -1,6 +1,8 @@
 const dbUtils = require('../utils/db.utils');
 
-module.exports.handler = async ({ username, avatar, id }) => {
+module.exports.handler = async event => {
+  const { username, avatar, id } = event;
+  console.log('event', event);
   try {
     let player;
     const resultsDb = await dbUtils.getUser(id);

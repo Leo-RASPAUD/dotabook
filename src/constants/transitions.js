@@ -4,5 +4,6 @@ export default {
   defaultAnimation: {
     startStyle: { opacity: 0 },
     endStyle: { opacity: 1 },
+    durationSeconds: 10,
   },
 };
