@@ -61,7 +61,7 @@ export default class MoreMenu extends React.PureComponent {
           <WithMargin>
             <FaSearch />
           </WithMargin>
-          <CustomLink to="/user/search">Search</CustomLink>
+          <CustomLink to="/search/user">Search</CustomLink>
         </MenuItem>
         <MenuItem
           onClick={() => {

@@ -1,9 +1,10 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import units from '../constants/units';
 import { SimpleImg } from 'react-simple-img';
-import { FaUser, FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
+import { FaUser, FaThumbsUp, FaThumbsDown, FaArrowRight } from 'react-icons/fa';
 import colors from '../constants/colors';
 import transitions from '../constants/transitions';
 import steam from '../utils/steam';
@@ -34,7 +35,7 @@ const Content = styled.div`
   flex: 1;
 `;
 
-const ProfileIcon = styled.div`
+const GenericIcon = styled.div`
   padding: 0 ${units.paddingLarge};
   color: ${colors.primary}
   cursor: pointer;
@@ -63,8 +64,8 @@ const Username = styled.div`
   text-overflow: ellipsis;
 `;
 
-export default props => {
-  const { users } = props;
+const SearchUserResults = props => {
+  const { users, history } = props;
   return users.map(user => (
     <Root key={user.id}>
       <SimpleImg
@@ -76,6 +77,7 @@ export default props => {
       />
       <Content>
         <Username>{user.username}</Username>
+
         <WrapperNote data-tip data-for="note">
           {user.note >= 0 && <FaThumbsUp color={user.note > 0 ? colors.success : 'gray'} size={'1.5em'} />}
           {user.note < 0 && <FaThumbsDown color={colors.error} size={'1.5em'} />}
@@ -84,17 +86,36 @@ export default props => {
             <span>User behaviour note</span>
           </ReactTooltip>
         </WrapperNote>
-        <ProfileIcon
+
+        <GenericIcon
           onClick={() => {
             window.open(`https://steamcommunity.com/profiles/${steam.convertSteamId64(user.id)}`);
           }}
         >
           <FaUser size={'1.5em'} data-tip data-for="profile" />
-        </ProfileIcon>
+        </GenericIcon>
         <ReactTooltip id="profile" place="right" type="info" effect="solid">
           <span>Open steam profile</span>
+        </ReactTooltip>
+
+        <GenericIcon
+          onClick={() => {
+            history.push({
+              pathname: `/user/${user.id}`,
+              state: {
+                user,
+              },
+            });
+          }}
+        >
+          <FaArrowRight size={'1.5em'} data-tip data-for="details" />
+        </GenericIcon>
+        <ReactTooltip id="details" place="right" type="info" effect="solid">
+          <span>Open details</span>
         </ReactTooltip>
       </Content>
     </Root>
   ));
 };
+
+export default withRouter(SearchUserResults);

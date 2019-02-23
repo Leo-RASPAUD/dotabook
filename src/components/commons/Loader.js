@@ -12,12 +12,15 @@ const Root = styled.div`
   margin-top: ${props => (props.withMargin ? '25px' : 0)};
   display: flex;
   align-items: center;
+  justify-content: center;
   user-select: none;
+  width: ${props => (props.width ? `${props.width}px` : '')};
+  height: ${props => (props.height ? `${props.height}px` : '')};
 `;
 
-export default ({ withMargin, message }) => (
+export default ({ withMargin, message, width, height }) => (
   <Animate play startStyle={{ opacity: 0 }} endStyle={{ opacity: 1 }}>
-    <Root withMargin={withMargin}>
+    <Root withMargin={withMargin} width={width} height={height}>
       {message && <div>{message}...</div>}
       <Loader />
     </Root>

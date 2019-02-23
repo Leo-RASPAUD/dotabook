@@ -2,10 +2,11 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import React from 'react';
 import styled from 'styled-components';
 import authUtils from './utils/auth';
-import PublicHome from './PublicHome/PublicHome';
-import Home from './Home/Home';
+import PublicHome from './Routes/PublicHome';
+import Home from './Routes/Home';
 import Toolbar from './components/Toolbar';
-import Search from './Search/Search';
+import UserDetails from './Routes/UserDetails';
+import Search from './Routes/Search';
 import Loader from './components/commons/Loader';
 import useFetchProfile from './hooks/useFetchProfile';
 
@@ -47,7 +48,8 @@ const App = () => {
         <Switch>
           {!isAuthenticated && <Route path="/" exact component={PublicHome} />}
           <PrivateRoute path="/home" exact component={Home} />
-          <PrivateRoute path="/user/search" exact component={Search} />
+          <PrivateRoute path="/search/user" exact component={Search} />
+          <PrivateRoute path="/user/:userId" exact component={UserDetails} />
           <Redirect to={isAuthenticated ? '/home' : '/'} />
         </Switch>
       </RootWrapper>

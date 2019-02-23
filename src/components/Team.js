@@ -13,7 +13,7 @@ import Flex from './commons/Flex';
 import Loader from './commons/Loader';
 
 const mediaQueries = `
-    @media ${media.fromXsmallScreen} {
+  @media ${media.fromXsmallScreen} {
     width: 50px;
     max-width: 50px;
   }
@@ -112,6 +112,11 @@ const LoadDetails = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+
+  @media ${media.fromXXlargeScreen} {
+    flex-direction: row;
+  }
 `;
 
 export default ({ teamName, players, updateNote, hasWon, loadPlayerDetails }) => {
