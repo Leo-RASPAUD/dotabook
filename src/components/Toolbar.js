@@ -87,11 +87,16 @@ const ToolbarComponent = props => {
   return (
     <Toolbar>
       <Logo>Dotabook</Logo>
-      {!isAuthenticated && <Login />}
+      {!isAuthenticated && (
+        <>
+          <CustomLinks to="/search/user">Search</CustomLinks>
+          <Login />
+        </>
+      )}
       {isAuthenticated && (
         <Links>
           <CustomLinks to="/home">Home</CustomLinks>
-          <CustomLinks to="/search/user">Search</CustomLinks>
+
           <Note note={user.note} data-tip data-for="note">
             {user.note}
             <ReactTooltip id="note" place="bottom" type="info" effect="solid">

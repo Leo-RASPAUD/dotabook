@@ -49,7 +49,7 @@ const App = () => {
           {!isAuthenticated && <Route path="/" exact component={PublicHome} />}
           <PrivateRoute path="/home" exact component={Home} />
           <PrivateRoute path="/search/user" exact component={Search} />
-          <PrivateRoute path="/user/:userId" exact component={UserDetails} />
+          <Route path="/user/:userId" exact component={UserDetails} />
           <Redirect to={isAuthenticated ? '/home' : '/'} />
         </Switch>
       </RootWrapper>

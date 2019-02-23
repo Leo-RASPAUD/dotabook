@@ -14,7 +14,7 @@ export default class Login extends React.PureComponent {
   login = async () => {
     const {
       data: { getOpenIdUrl: redirectUrl },
-    } = await API.graphql(graphqlOperation(queries.getOpenIdUrl, { location: window.location.href }));
+    } = await API.graphql(graphqlOperation(queries.getOpenIdUrl, { location: window.location.origin }));
     window.location.replace(redirectUrl);
   };
 
