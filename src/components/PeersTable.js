@@ -18,12 +18,6 @@ const Root = styled.div`
   }
 `;
 
-const Data = styled.div`
-  @media ${media.fromMediumScreen} {
-    font-size: 12px;
-  }
-`;
-
 const Name = styled.div`
   max-width: 150px;
   white-space: nowrap;
@@ -52,10 +46,10 @@ const PeersTable = ({ peers }) => {
                     <span>Last played: {format(date, 'dd/MM/yyyy kk:mm')}</span>
                   </ReactTooltip>
                 </Flex>
-                <Data>
+                <div>
                   <span style={{ color: colors.success }}>{peer.with_win} / </span>
                   <span style={{ color: colors.error }}>{peer.with_games - peer.with_win}</span>
-                </Data>
+                </div>
               </Flex>
             </Flex>
           );
