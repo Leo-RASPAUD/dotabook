@@ -5,7 +5,7 @@
   "dependencies": {
     "aws-amplify": "^1.1.19",
     "aws-amplify-react": "^2.3.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "date-fns": "^2.0.0-alpha.27",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
